@@ -1,4 +1,4 @@
-package by.home.dao.factory;
+package by.home.factory.util;
 
 import by.home.dao.api.IConnection;
 import by.home.dao.util.ConnectionManager;

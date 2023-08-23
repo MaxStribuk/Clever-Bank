@@ -2,7 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Transaction;
-import by.home.dao.factory.ConnectionSingleton;
+import by.home.factory.util.ConnectionSingleton;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
