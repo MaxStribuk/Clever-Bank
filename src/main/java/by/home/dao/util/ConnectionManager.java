@@ -11,10 +11,10 @@ import java.sql.SQLException;
 @Slf4j
 public class ConnectionManager implements IConnection {
 
-    private final String URL = "db.url";
-    private final String USERNAME = "db.username";
-    private final String PASSWORD = "db.password";
-    private final String DRIVER = "db.driver";
+    private final String URL = "url";
+    private final String USERNAME = "username";
+    private final String PASSWORD = "password";
+    private final String DRIVER = "driver";
     private final ComboPooledDataSource cpds;
 
     public ConnectionManager() {
