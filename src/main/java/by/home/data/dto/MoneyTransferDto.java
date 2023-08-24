@@ -19,5 +19,4 @@ public class MoneyTransferDto implements Serializable {
     private String accountFrom;
     private String accountTo;
     private BigDecimal amount;
-    private short transactionType;
 }
