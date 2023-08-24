@@ -85,7 +85,7 @@ public class TransactionDao implements ITransactionDao {
     }
 
     @Override
-    public boolean insert(Transaction transaction) {
+    public void insert(Transaction transaction) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
              PreparedStatement statement = conn.prepareStatement(INSERT_TRANSACTION)) {
             statement.setString(1, transaction.getId().toString());
@@ -94,7 +94,7 @@ public class TransactionDao implements ITransactionDao {
             statement.setBigDecimal(4, transaction.getAmount());
             statement.setTimestamp(5, Timestamp.valueOf(transaction.getTime()));
             statement.setShort(6, transaction.getTypeId());
-            return statement.executeUpdate() == 1;
+            statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);

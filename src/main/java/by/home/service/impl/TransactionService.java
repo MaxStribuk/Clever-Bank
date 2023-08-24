@@ -12,6 +12,6 @@ public class TransactionService implements ITransactionService {
 
     @Override
     public void add(Transaction transaction) {
-
+        transactionDao.insert(transaction);
     }
 }

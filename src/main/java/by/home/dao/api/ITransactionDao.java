@@ -14,5 +14,5 @@ public interface ITransactionDao {
 
     List<Transaction> findAll();
 
-    boolean insert(Transaction transaction);
+    void insert(Transaction transaction);
 }
