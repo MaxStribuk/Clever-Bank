@@ -1,6 +1,7 @@
 package by.home.factory.service;
 
 import by.home.factory.dao.AccountDaoSingleton;
+import by.home.factory.util.ValidatorSingleton;
 import by.home.service.api.IAccountService;
 import by.home.service.impl.AccountService;
 import lombok.AccessLevel;
@@ -16,7 +17,9 @@ public class AccountServiceSingleton {
             synchronized (AccountServiceSingleton.class) {
                 if (instance == null) {
                     instance = new AccountService(
-                            AccountDaoSingleton.getInstance()
+                            AccountDaoSingleton.getInstance(),
+                            ValidatorSingleton.getInstance(),
+                            TransactionServiceSingleton.getInstance()
                     );
                 }
             }
