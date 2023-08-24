@@ -15,20 +15,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static by.home.dao.util.Constant.ColumnName.ACCOUNT_FROM;
+import static by.home.dao.util.Constant.ColumnName.ACCOUNT_TO;
+import static by.home.dao.util.Constant.ColumnName.AMOUNT;
+import static by.home.dao.util.Constant.ColumnName.ID;
+import static by.home.dao.util.Constant.ColumnName.TIME;
+import static by.home.dao.util.Constant.ColumnName.TYPE_ID;
+import static by.home.dao.util.Constant.SqlQuery.FIND_ALL_TRANSACTION;
+import static by.home.dao.util.Constant.SqlQuery.FIND_TRANSACTION_BY_ACCOUNT;
+import static by.home.dao.util.Constant.SqlQuery.FIND_TRANSACTION_BY_TRANSACTION_ID;
+import static by.home.dao.util.Constant.SqlQuery.INSERT_TRANSACTION;
+
 @Slf4j
 public class TransactionDao implements ITransactionDao {
-
-    private final String FIND_BY_TRANSACTION_ID = "SELECT * FROM transaction WHERE id=?;";
-    private final String FIND_BY_ACCOUNT =
-            "SELECT * FROM transaction WHERE account_from=? OR account_to=?;";
-    private final String FIND_ALL = "SELECT * FROM transaction;";
-    private final String INSERT = "INSERT INTO transaction " +
-            "(id, account_from, account_to, amount, time, type_id) VALUES (?,?,?,?,?,?);";
 
     @Override
     public Optional<Transaction> findById(UUID id) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(FIND_BY_TRANSACTION_ID,
+             PreparedStatement statement = conn.prepareStatement(
+                     FIND_TRANSACTION_BY_TRANSACTION_ID,
                      ResultSet.TYPE_SCROLL_INSENSITIVE,
                      ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, id.toString());
@@ -46,7 +51,7 @@ public class TransactionDao implements ITransactionDao {
     @Override
     public List<Transaction> findAll(String account) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(FIND_BY_ACCOUNT)) {
+             PreparedStatement statement = conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
             statement.setString(1, account);
             statement.setString(2, account);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -65,7 +70,7 @@ public class TransactionDao implements ITransactionDao {
     @Override
     public List<Transaction> findAll() {
         try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(FIND_ALL)) {
+             PreparedStatement statement = conn.prepareStatement(FIND_ALL_TRANSACTION)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 List<Transaction> transactions = new ArrayList<>();
                 while (resultSet.next()) {
@@ -82,7 +87,7 @@ public class TransactionDao implements ITransactionDao {
     @Override
     public boolean insert(Transaction transaction) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(INSERT)) {
+             PreparedStatement statement = conn.prepareStatement(INSERT_TRANSACTION)) {
             statement.setString(1, transaction.getId().toString());
             statement.setString(2, transaction.getAccountFrom());
             statement.setString(3, transaction.getAccountTo());
@@ -98,12 +103,12 @@ public class TransactionDao implements ITransactionDao {
 
     private Transaction getTransaction(ResultSet resultSet) throws SQLException {
         return Transaction.builder()
-                .id(UUID.fromString(resultSet.getString("id")))
-                .accountFrom(resultSet.getString("account_from"))
-                .accountTo(resultSet.getString("account_to"))
-                .typeId(resultSet.getShort("type_id"))
-                .amount(resultSet.getBigDecimal("amount"))
-                .time(resultSet.getTimestamp("time").toLocalDateTime())
+                .id(UUID.fromString(resultSet.getString(ID)))
+                .accountFrom(resultSet.getString(ACCOUNT_FROM))
+                .accountTo(resultSet.getString(ACCOUNT_TO))
+                .typeId(resultSet.getShort(TYPE_ID))
+                .amount(resultSet.getBigDecimal(AMOUNT))
+                .time(resultSet.getTimestamp(TIME).toLocalDateTime())
                 .build();
     }
 }
