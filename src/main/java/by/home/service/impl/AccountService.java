@@ -5,7 +5,9 @@ import by.home.dao.entity.Account;
 import by.home.dao.entity.Transaction;
 import by.home.dao.entity.TransactionType;
 import by.home.data.dto.ChangeBalanceDto;
+import by.home.data.dto.MoneyTransferDto;
 import by.home.data.exception.AccountNotFoundException;
+import by.home.data.exception.InvalidArgsException;
 import by.home.data.exception.InvalidBalanceException;
 import by.home.service.api.IAccountService;
 import by.home.service.api.ITransactionService;
@@ -29,10 +31,7 @@ public class AccountService implements IAccountService {
     private final ITransactionService transactionService;
 
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
-        Set<ConstraintViolation<ChangeBalanceDto>> violations = validator.validate(changeBalanceDto);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
+        validate(changeBalanceDto);
         Account account = accountDao.findById(changeBalanceDto.getAccount())
                 .orElseThrow(() -> new AccountNotFoundException(
                         "account not found " + changeBalanceDto.getAccount()));
@@ -45,6 +44,21 @@ public class AccountService implements IAccountService {
         account.setBalance(newBalance);
         accountDao.update(account);
         transactionService.add(getTransaction(changeBalanceDto));
+    }
+
+    @Override
+    public void transferMoney(MoneyTransferDto moneyTransferDto) {
+
+    }
+
+    private void validate(ChangeBalanceDto changeBalanceDto) {
+        Set<ConstraintViolation<ChangeBalanceDto>> violations = validator.validate(changeBalanceDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+        if (changeBalanceDto.getAmount().compareTo(BigDecimal.ZERO) == 0) {
+            throw new InvalidArgsException("amount must be positive or negative");
+        }
     }
 
     private Transaction getTransaction(ChangeBalanceDto changeBalanceDto) {
