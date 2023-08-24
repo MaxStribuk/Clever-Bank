@@ -70,7 +70,7 @@ CREATE TABLE public.transaction
     account_from character(28),
     account_to   character(28),
     amount       numeric(10, 2)              NOT NULL,
-    "time"       timestamp without time zone NOT NULL
+    "time"       timestamp(0) without time zone NOT NULL
 );
 
 ALTER TABLE public.transaction

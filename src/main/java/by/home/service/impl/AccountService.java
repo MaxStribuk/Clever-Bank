@@ -12,7 +12,6 @@ import by.home.data.exception.InvalidBalanceException;
 import by.home.service.api.IAccountService;
 import by.home.service.api.ITransactionService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -23,7 +22,6 @@ import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Slf4j
 public class AccountService implements IAccountService {
 
     private final IAccountDao accountDao;
@@ -76,19 +74,22 @@ public class AccountService implements IAccountService {
 
     private void validate(ChangeBalanceDto changeBalanceDto) {
         Set<ConstraintViolation<ChangeBalanceDto>> violations = validator.validate(changeBalanceDto);
-        BigDecimal amount = changeBalanceDto.getAmount();
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
+        BigDecimal amount = changeBalanceDto.getAmount();
         validateAmount(amount);
     }
 
     private void validate(MoneyTransferDto moneyTransferDto) {
         Set<ConstraintViolation<MoneyTransferDto>> violations = validator.validate(moneyTransferDto);
-        BigDecimal amount = moneyTransferDto.getAmount();
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
+        if (moneyTransferDto.getAccountTo().equals(moneyTransferDto.getAccountFrom())) {
+            throw new InvalidArgsException("accountFrom must not equals accountTo");
+        }
+        BigDecimal amount = moneyTransferDto.getAmount();
         validateAmount(amount);
     }
 
