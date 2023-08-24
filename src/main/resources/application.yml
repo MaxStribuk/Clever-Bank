@@ -1,5 +1,5 @@
 #Database Properties
-db.url=jdbc:postgresql://localhost:5432/CleverBank
-db.driver=org.postgresql.Driver
-db.username=postgres
-db.password=postgres
+url: jdbc:postgresql://localhost:5432/CleverBank?stringtype=unspecified
+driver: org.postgresql.Driver
+username: postgres
+password: postgres
