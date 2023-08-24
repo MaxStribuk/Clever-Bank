@@ -5,5 +5,6 @@ import javax.validation.Validator;
 public interface IValidation {
 
     Validator open();
+
     void close() throws Exception;
 }

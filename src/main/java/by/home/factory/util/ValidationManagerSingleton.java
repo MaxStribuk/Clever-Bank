@@ -17,7 +17,7 @@ public class ValidationManagerSingleton {
         if (instance == null) {
             synchronized (ValidationManagerSingleton.class) {
                 if (instance == null) {
-                    instance =  new ValidationManager(
+                    instance = new ValidationManager(
                             Validation.byProvider(ApacheValidationProvider.class)
                                     .configure()
                                     .buildValidatorFactory()

@@ -50,13 +50,14 @@ public class StartMenu {
 
     private void transferMoney(String[] args) {
         accountService.transferMoney(
-                new MoneyTransferDto(args[0], args[1], new BigDecimal(args[2])));
+                new MoneyTransferDto(args[0], args[1], new BigDecimal(args[2]))
+        );
     }
 
     private void changeBalance(String[] args) {
         accountService.changeBalance(
-                new ChangeBalanceDto(args[0], new BigDecimal(args[1])
-                ));
+                new ChangeBalanceDto(args[0], new BigDecimal(args[1]))
+        );
     }
 
     private void closeResources() {

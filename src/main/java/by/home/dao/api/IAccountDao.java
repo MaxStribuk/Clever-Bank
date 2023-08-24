@@ -7,5 +7,6 @@ import java.util.Optional;
 public interface IAccountDao {
 
     Optional<Account> findById(String number);
+
     void update(Account account);
 }

@@ -14,7 +14,7 @@ public class ValidatorSingleton {
         if (instance == null) {
             synchronized (ValidatorSingleton.class) {
                 if (instance == null) {
-                    instance =  ValidationManagerSingleton.getInstance().open();
+                    instance = ValidationManagerSingleton.getInstance().open();
                 }
             }
         }
