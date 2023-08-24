@@ -13,7 +13,11 @@ repositories {
 dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
     implementation group: 'com.mchange', name: 'c3p0', version: '0.9.5.5'
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '2.0.2'
+    implementation group: 'org.apache.bval', name: 'bval-jsr', version: '2.0.6'
+    implementation group: 'org.apache.bval', name: 'bval-extras', version: '2.0.6'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.5'
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.7'
 
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
