@@ -6,7 +6,6 @@ import by.home.factory.util.ConnectionSingleton;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,9 +15,8 @@ import java.util.UUID;
 @Slf4j
 public class AccountDao implements IAccountDao {
 
-
     private final String FIND_BY_ACCOUNT_NUMBER = "SELECT * FROM account WHERE number=?;";
-    private final String UPDATE = "UPDATE account SET balance=?, close_date=? WHERE number=?;";
+    private final String UPDATE = "UPDATE account SET balance=? WHERE number=?;";
 
     @Override
     public Optional<Account> findById(String number) {
@@ -43,8 +41,7 @@ public class AccountDao implements IAccountDao {
         try (Connection conn = ConnectionSingleton.getInstance().open();
              PreparedStatement statement = conn.prepareStatement(UPDATE)) {
             statement.setBigDecimal(1, account.getBalance());
-            statement.setDate(2, Date.valueOf(account.getCloseDate()));
-            statement.setString(3, account.getNumber());
+            statement.setString(2, account.getNumber());
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -59,7 +56,6 @@ public class AccountDao implements IAccountDao {
                 .clientId(UUID.fromString(resultSet.getString("client_id")))
                 .bankId(resultSet.getShort("bank_id"))
                 .openDate(resultSet.getDate("open_date").toLocalDate())
-                .closeDate(resultSet.getDate("close_date").toLocalDate())
                 .build();
     }
 }

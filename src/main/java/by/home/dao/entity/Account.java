@@ -20,7 +20,6 @@ public class Account implements Serializable {
 
     private String number;
     private LocalDate openDate;
-    private LocalDate closeDate;
     private short bankId;
     private UUID clientId;
     private BigDecimal balance;
