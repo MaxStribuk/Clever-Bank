@@ -34,4 +34,13 @@ public final class Constant {
         public static final String AMOUNT = "amount";
         public static final String TIME = "time";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Utils {
+
+        public static final String PROPERTIES_FILE_NAME = "application.yml";
+        public static final String DAO_IMPL_PACKAGE_NAME = "by.home.dao.impl";
+        public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
+        public static final String SINGLETON_CLASS_NAME_PATTERN = "by.home.factory.dao.%sSingleton";
+    }
 }
