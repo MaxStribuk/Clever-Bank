@@ -2,7 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
-import by.home.factory.util.ConnectionSingleton;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -12,16 +12,24 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static by.home.dao.util.Constant.ColumnName.BALANCE;
+import static by.home.dao.util.Constant.ColumnName.BANK_ID;
+import static by.home.dao.util.Constant.ColumnName.CLIENT_ID;
+import static by.home.dao.util.Constant.ColumnName.NUMBER;
+import static by.home.dao.util.Constant.ColumnName.OPEN_DATE;
+import static by.home.dao.util.Constant.SqlQuery.FIND_ACCOUNT_BY_ACCOUNT_NUMBER;
+import static by.home.dao.util.Constant.SqlQuery.UPDATE_ACCOUNT;
+
 @Slf4j
+@Setter
 public class AccountDao implements IAccountDao {
 
-    private final String FIND_BY_ACCOUNT_NUMBER = "SELECT * FROM account WHERE number=?;";
-    private final String UPDATE = "UPDATE account SET balance=? WHERE number=?;";
+    private Connection conn;
 
     @Override
     public Optional<Account> findById(String number) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(FIND_BY_ACCOUNT_NUMBER,
+        try (PreparedStatement statement = conn.prepareStatement(
+                     FIND_ACCOUNT_BY_ACCOUNT_NUMBER,
                      ResultSet.TYPE_SCROLL_INSENSITIVE,
                      ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, number);
@@ -38,8 +46,7 @@ public class AccountDao implements IAccountDao {
 
     @Override
     public void update(Account account) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(UPDATE)) {
+        try (PreparedStatement statement = conn.prepareStatement(UPDATE_ACCOUNT)) {
             statement.setBigDecimal(1, account.getBalance());
             statement.setString(2, account.getNumber());
             statement.executeUpdate();
@@ -51,11 +58,11 @@ public class AccountDao implements IAccountDao {
 
     private Account getAccount(ResultSet resultSet) throws SQLException {
         return Account.builder()
-                .number(resultSet.getString("number"))
-                .balance(resultSet.getBigDecimal("balance"))
-                .clientId(UUID.fromString(resultSet.getString("client_id")))
-                .bankId(resultSet.getShort("bank_id"))
-                .openDate(resultSet.getDate("open_date").toLocalDate())
+                .number(resultSet.getString(NUMBER))
+                .balance(resultSet.getBigDecimal(BALANCE))
+                .clientId(UUID.fromString(resultSet.getString(CLIENT_ID)))
+                .bankId(resultSet.getShort(BANK_ID))
+                .openDate(resultSet.getDate(OPEN_DATE).toLocalDate())
                 .build();
     }
 }
