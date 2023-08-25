@@ -24,13 +24,13 @@ public class ConnectionManager implements IConnection {
 
     private void loadDriver() {
         try {
-            cpds.setDriverClass(PropertiesUtil.get(DRIVER));
+            cpds.setDriverClass(PropertiesUtil.getProperty(DRIVER));
         } catch (PropertyVetoException e) {
             log.error(e.getMessage());
         }
-        cpds.setJdbcUrl(PropertiesUtil.get(URL));
-        cpds.setUser(PropertiesUtil.get(USERNAME));
-        cpds.setPassword(PropertiesUtil.get(PASSWORD));
+        cpds.setJdbcUrl(PropertiesUtil.getProperty(URL));
+        cpds.setUser(PropertiesUtil.getProperty(USERNAME));
+        cpds.setPassword(PropertiesUtil.getProperty(PASSWORD));
     }
 
     @Override
