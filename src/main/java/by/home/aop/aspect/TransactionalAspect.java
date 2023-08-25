@@ -25,7 +25,7 @@ public class TransactionalAspect {
         try {
             connection = ConnectionSingleton.getInstance().open();
             connection.setReadOnly(transactional.readOnly());
-            connection.setTransactionIsolation(transactional.transactionalLevel());
+            connection.setTransactionIsolation(transactional.isolation().getIsolationLevel());
             connection.setAutoCommit(false);
             savepoint = connection.setSavepoint();
             for (Class<?> clazz : transactional.daoClasses()) {

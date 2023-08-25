@@ -1,9 +1,13 @@
 package by.home.service.impl;
 
+import by.home.aop.api.Transactional;
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
+import by.home.dao.entity.IsolationLevel;
 import by.home.dao.entity.Transaction;
 import by.home.dao.entity.TransactionType;
+import by.home.dao.impl.AccountDao;
+import by.home.dao.impl.TransactionDao;
 import by.home.data.dto.ChangeBalanceDto;
 import by.home.data.dto.MoneyTransferDto;
 import by.home.data.exception.AccountNotFoundException;
@@ -29,6 +33,7 @@ public class AccountService implements IAccountService {
     private final ITransactionService transactionService;
 
     @Override
+    @Transactional(daoClasses = {AccountDao.class, TransactionDao.class})
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         validate(changeBalanceDto);
         BigDecimal amount = changeBalanceDto.getAmount();
@@ -43,6 +48,8 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    @Transactional(daoClasses = {AccountDao.class, TransactionDao.class},
+            isolation = IsolationLevel.TRANSACTION_SERIALIZABLE)
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
         validate(moneyTransferDto);
         BigDecimal amount = moneyTransferDto.getAmount();
@@ -50,9 +57,20 @@ public class AccountService implements IAccountService {
                 .orElseThrow(() -> new AccountNotFoundException("account not found"));
         Account accountTo = accountDao.findById(moneyTransferDto.getAccountTo())
                 .orElseThrow(() -> new AccountNotFoundException("account not found"));
+        sort(moneyTransferDto);
         writeOffMoney(accountFrom, amount);
         addMoney(accountTo, amount);
         transactionService.add(getTransaction(moneyTransferDto));
+    }
+
+    private void sort(MoneyTransferDto moneyTransferDto) {
+        String accountFrom = moneyTransferDto.getAccountFrom();
+        String accountTo = moneyTransferDto.getAccountTo();
+        if (accountFrom.compareTo(accountTo) > 0) {
+            moneyTransferDto.setAccountFrom(accountTo);
+            moneyTransferDto.setAccountTo(accountFrom);
+            moneyTransferDto.setAmount(moneyTransferDto.getAmount().negate());
+        }
     }
 
     private void writeOffMoney(Account account, BigDecimal amount) {

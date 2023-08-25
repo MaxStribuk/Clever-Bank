@@ -10,6 +10,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -28,8 +29,9 @@ public class MoneyTransferDto implements Serializable {
     @NotBlank(message = "invalid accountTo number")
     private String accountTo;
 
-    @NotNull(message = "amount must be positive or negative")
+    @NotNull(message = "amount must be positive")
     @Digits(integer = 8, fraction = 2,
             message = "the amount must have no more than 8 digits in the integer part and 2 in the fractional")
+    @Positive(message = "amount must be positive")
     private BigDecimal amount;
 }
