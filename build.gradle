@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.freefair.aspectj.post-compile-weaving' version '8.2.2'
 }
 
 group = 'by.home'
@@ -21,6 +22,10 @@ dependencies {
     implementation group: 'org.apache.bval', name: 'bval-jsr', version: '2.0.6'
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.5'
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.7'
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.20'
+    implementation group: 'org.aspectj', name: 'aspectjrt', version: '1.9.20'
+    implementation group: 'com.google.guava', name: 'guava', version: '32.1.2-jre'
+    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.162'
 
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'

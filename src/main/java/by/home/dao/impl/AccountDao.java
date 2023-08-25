@@ -2,7 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
-import by.home.factory.util.ConnectionSingleton;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -21,12 +21,14 @@ import static by.home.dao.util.Constant.SqlQuery.FIND_ACCOUNT_BY_ACCOUNT_NUMBER;
 import static by.home.dao.util.Constant.SqlQuery.UPDATE_ACCOUNT;
 
 @Slf4j
+@Setter
 public class AccountDao implements IAccountDao {
+
+    private Connection conn;
 
     @Override
     public Optional<Account> findById(String number) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(
+        try (PreparedStatement statement = conn.prepareStatement(
                      FIND_ACCOUNT_BY_ACCOUNT_NUMBER,
                      ResultSet.TYPE_SCROLL_INSENSITIVE,
                      ResultSet.CONCUR_UPDATABLE)) {
@@ -44,8 +46,7 @@ public class AccountDao implements IAccountDao {
 
     @Override
     public void update(Account account) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(UPDATE_ACCOUNT)) {
+        try (PreparedStatement statement = conn.prepareStatement(UPDATE_ACCOUNT)) {
             statement.setBigDecimal(1, account.getBalance());
             statement.setString(2, account.getNumber());
             statement.executeUpdate();

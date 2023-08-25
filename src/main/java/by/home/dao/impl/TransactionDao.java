@@ -2,7 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Transaction;
-import by.home.factory.util.ConnectionSingleton;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -27,12 +27,14 @@ import static by.home.dao.util.Constant.SqlQuery.FIND_TRANSACTION_BY_TRANSACTION
 import static by.home.dao.util.Constant.SqlQuery.INSERT_TRANSACTION;
 
 @Slf4j
+@Setter
 public class TransactionDao implements ITransactionDao {
+
+    private Connection conn;
 
     @Override
     public Optional<Transaction> findById(UUID id) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(
+        try (PreparedStatement statement = conn.prepareStatement(
                      FIND_TRANSACTION_BY_TRANSACTION_ID,
                      ResultSet.TYPE_SCROLL_INSENSITIVE,
                      ResultSet.CONCUR_UPDATABLE)) {
@@ -50,8 +52,7 @@ public class TransactionDao implements ITransactionDao {
 
     @Override
     public List<Transaction> findAll(String account) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
+        try (PreparedStatement statement = conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
             statement.setString(1, account);
             statement.setString(2, account);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -69,8 +70,7 @@ public class TransactionDao implements ITransactionDao {
 
     @Override
     public List<Transaction> findAll() {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(FIND_ALL_TRANSACTION)) {
+        try (PreparedStatement statement = conn.prepareStatement(FIND_ALL_TRANSACTION)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 List<Transaction> transactions = new ArrayList<>();
                 while (resultSet.next()) {
@@ -86,8 +86,7 @@ public class TransactionDao implements ITransactionDao {
 
     @Override
     public void insert(Transaction transaction) {
-        try (Connection conn = ConnectionSingleton.getInstance().open();
-             PreparedStatement statement = conn.prepareStatement(INSERT_TRANSACTION)) {
+        try (PreparedStatement statement = conn.prepareStatement(INSERT_TRANSACTION)) {
             statement.setString(1, transaction.getId().toString());
             statement.setString(2, transaction.getAccountFrom());
             statement.setString(3, transaction.getAccountTo());
