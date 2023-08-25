@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@ToString
 public class MoneyTransferDto implements Serializable {
 
     @Pattern(regexp = "^BY13[A-Z]{4}[0-9]{20}$", message = "invalid account number")

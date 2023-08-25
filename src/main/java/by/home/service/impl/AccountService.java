@@ -1,5 +1,6 @@
 package by.home.service.impl;
 
+import by.home.aop.api.Loggable;
 import by.home.aop.api.Transactional;
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
@@ -34,6 +35,7 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional(daoClasses = {AccountDao.class, TransactionDao.class})
+    @Loggable
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         validate(changeBalanceDto);
         BigDecimal amount = changeBalanceDto.getAmount();
@@ -50,6 +52,7 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional(daoClasses = {AccountDao.class, TransactionDao.class},
             isolation = IsolationLevel.TRANSACTION_SERIALIZABLE)
+    @Loggable
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
         validate(moneyTransferDto);
         BigDecimal amount = moneyTransferDto.getAmount();
