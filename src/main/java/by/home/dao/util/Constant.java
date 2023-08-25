@@ -40,6 +40,7 @@ public final class Constant {
 
         public static final String PROPERTIES_FILE_NAME = "application.yml";
         public static final String DAO_IMPL_PACKAGE_NAME = "by.home.dao.impl";
+        public static final String DAO_API_PACKAGE_NAME = "by.home.dao.api";
         public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
         public static final String SINGLETON_CLASS_NAME_PATTERN = "by.home.factory.dao.%sSingleton";
         public static final String LOGGING_FILE_NAME = "logging.txt";
