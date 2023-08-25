@@ -42,5 +42,7 @@ public final class Constant {
         public static final String DAO_IMPL_PACKAGE_NAME = "by.home.dao.impl";
         public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
         public static final String SINGLETON_CLASS_NAME_PATTERN = "by.home.factory.dao.%sSingleton";
+        public static final String LOGGING_FILE_NAME = "logging.txt";
+        public static final String LOGGING_MESSAGE_PATTERN = "Method %s args %s return value %s\n";
     }
 }
