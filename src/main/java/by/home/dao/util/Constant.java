@@ -10,6 +10,7 @@ public final class Constant {
     public static final class SqlQuery {
 
         public static final String FIND_ACCOUNT_BY_ACCOUNT_NUMBER = "SELECT * FROM account WHERE number=?;";
+        public static final String FIND_BANK_BY_BANK_ID = "SELECT * FROM bank WHERE id=?;";
         public static final String UPDATE_ACCOUNT = "UPDATE account SET balance=? WHERE number=?;";
         public static final String FIND_TRANSACTION_BY_TRANSACTION_ID = "SELECT * FROM transaction WHERE id=?;";
         public static final String FIND_TRANSACTION_BY_ACCOUNT =
@@ -33,6 +34,7 @@ public final class Constant {
         public static final String TYPE_ID = "type_id";
         public static final String AMOUNT = "amount";
         public static final String TIME = "time";
+        public static final String NAME = "name";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -45,5 +47,22 @@ public final class Constant {
         public static final String SINGLETON_CLASS_NAME_PATTERN = "by.home.factory.dao.%sSingleton";
         public static final String LOGGING_FILE_NAME = "logging.txt";
         public static final String LOGGING_MESSAGE_PATTERN = "Method %s args %s return value %s\n";
+        public static final String DATE_PATTERN = "dd-MM-yyyy";
+        public static final String CHECK_FILE_NAME = "check/%s.pdf";
+        public static final String FONT_COURIER_NEW_PATH = "/fonts/courier-new.ttf";
+        public static final String CHECK_TEMPLATE = """
+                        --------------------------------------------------------------
+                        |                         Банковский чек                     |
+                        |                                                            |
+                        |Чек:%56s|
+                        |%-20s%40tT|
+                        |Тип транзакции:%45s|
+                        |Банк отправителя:%43s|
+                        |Банк получателя:%44s|
+                        |Счет отправителя:%43s|
+                        |Счет получателя:%44s|
+                        |Сумма:%50.2f BYN|
+                        |------------------------------------------------------------|  
+                                            """;
     }
 }

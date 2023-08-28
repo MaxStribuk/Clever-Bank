@@ -1,10 +1,12 @@
 package by.home.dao.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.io.Serializable;
 
 @AllArgsConstructor
+@Getter
 public enum TransactionType implements Serializable {
 
     REFILL("Пополнение"),
@@ -16,5 +18,9 @@ public enum TransactionType implements Serializable {
 
     public static short getId(TransactionType type) {
         return (short) (type.ordinal() + 1);
+    }
+
+    public static TransactionType getTransactionType(short id) {
+        return TransactionType.values()[id];
     }
 }
