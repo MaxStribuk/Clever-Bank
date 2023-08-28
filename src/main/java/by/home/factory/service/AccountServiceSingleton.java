@@ -1,6 +1,7 @@
 package by.home.factory.service;
 
 import by.home.factory.dao.AccountDaoSingleton;
+import by.home.factory.util.ModelMapperSingleton;
 import by.home.factory.util.ValidatorSingleton;
 import by.home.service.api.IAccountService;
 import by.home.service.impl.AccountService;
@@ -19,7 +20,10 @@ public class AccountServiceSingleton {
                     instance = new AccountService(
                             AccountDaoSingleton.getInstance(),
                             ValidatorSingleton.getInstance(),
-                            TransactionServiceSingleton.getInstance()
+                            TransactionServiceSingleton.getInstance(),
+                            CheckServiceSingleton.getInstance(),
+                            ModelMapperSingleton.getInstance(),
+                            BankServiceSingleton.getInstance()
                     );
                 }
             }
