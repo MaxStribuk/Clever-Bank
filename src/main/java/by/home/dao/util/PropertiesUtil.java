@@ -7,11 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
+import static by.home.dao.util.Constant.Utils.DAO_API_PACKAGE_NAME;
 import static by.home.dao.util.Constant.Utils.DAO_IMPL_PACKAGE_NAME;
 import static by.home.dao.util.Constant.Utils.GET_INSTANCE_METHOD_NAME;
 import static by.home.dao.util.Constant.Utils.PROPERTIES_FILE_NAME;
@@ -49,16 +53,22 @@ public class PropertiesUtil {
 
     private static void loadInstanceDaoClasses() {
         List<String> classNames;
-        try (ScanResult scanResult = new ClassGraph()
+        List<String> interfaceNames;
+        try (ScanResult scanDaoImplClassesResult = new ClassGraph()
                 .acceptPackages(DAO_IMPL_PACKAGE_NAME)
                 .enableClassInfo()
-                .scan()) {
-            classNames = scanResult.getAllClasses().getNames();
-            fillDaoClassesMap(classNames);
+                .scan();
+             ScanResult scanDaoInterfacesResult = new ClassGraph()
+                     .acceptPackages(DAO_API_PACKAGE_NAME)
+                     .enableClassInfo()
+                     .scan();) {
+            classNames = scanDaoImplClassesResult.getAllClasses().getNames();
+            interfaceNames = scanDaoInterfacesResult.getAllClasses().getNames();
+            fillDaoClassesMap(classNames, new HashSet<>(interfaceNames));
         }
     }
 
-    private static void fillDaoClassesMap(List<String> classNames) {
+    private static void fillDaoClassesMap(List<String> classNames, Set<String> interfaceNames) {
         try {
             for (String className : classNames) {
                 Class<?> daoClass = Class.forName(className);
@@ -68,7 +78,11 @@ public class PropertiesUtil {
                 Class<?> singletonClass = Class.forName(singletonClassName);
                 Method getInstanceMethod = singletonClass.getDeclaredMethod(GET_INSTANCE_METHOD_NAME);
                 Object daoClassInstance = getInstanceMethod.invoke(singletonClass);
-                DAO_CLASSES.put(daoClass, daoClassInstance);
+                Class<?> daoInterface = Arrays.stream(daoClass.getInterfaces())
+                        .filter(x -> interfaceNames.contains(x.getName()))
+                        .findFirst()
+                        .orElseGet(null);
+                DAO_CLASSES.put(daoInterface, daoClassInstance);
             }
         } catch (ReflectiveOperationException e) {
             log.error(e.getMessage());

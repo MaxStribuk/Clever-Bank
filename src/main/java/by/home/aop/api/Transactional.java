@@ -15,7 +15,7 @@ public @interface Transactional {
 
     IsolationLevel isolation() default IsolationLevel.TRANSACTION_READ_COMMITTED;
 
-    Class<?>[] daoClasses() default {};
+    Class<?>[] daoInterfaces() default {};
 
     boolean readOnly() default false;
 }
