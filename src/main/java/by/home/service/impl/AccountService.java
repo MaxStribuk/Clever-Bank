@@ -3,20 +3,25 @@ package by.home.service.impl;
 import by.home.aop.api.Loggable;
 import by.home.aop.api.Transactional;
 import by.home.dao.api.IAccountDao;
+import by.home.dao.api.IBankDao;
+import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Account;
 import by.home.dao.entity.IsolationLevel;
 import by.home.dao.entity.Transaction;
 import by.home.dao.entity.TransactionType;
-import by.home.dao.impl.AccountDao;
-import by.home.dao.impl.TransactionDao;
+import by.home.data.dto.BankDto;
 import by.home.data.dto.ChangeBalanceDto;
 import by.home.data.dto.MoneyTransferDto;
+import by.home.data.dto.TransactionDto;
 import by.home.data.exception.AccountNotFoundException;
 import by.home.data.exception.InvalidArgsException;
 import by.home.data.exception.InvalidBalanceException;
 import by.home.service.api.IAccountService;
+import by.home.service.api.IBankService;
+import by.home.service.api.ICheckService;
 import by.home.service.api.ITransactionService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -32,9 +37,12 @@ public class AccountService implements IAccountService {
     private final IAccountDao accountDao;
     private final Validator validator;
     private final ITransactionService transactionService;
+    private final ICheckService checkService;
+    private final ModelMapper modelMapper;
+    private final IBankService bankService;
 
     @Override
-    @Transactional(daoClasses = {AccountDao.class, TransactionDao.class})
+    @Transactional(daoInterfaces = {IAccountDao.class, ITransactionDao.class, IBankDao.class})
     @Loggable
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         validate(changeBalanceDto);
@@ -46,11 +54,14 @@ public class AccountService implements IAccountService {
         } else {
             addMoney(account, amount);
         }
-        transactionService.add(getTransaction(changeBalanceDto));
+        Transaction transaction = getTransaction(changeBalanceDto);
+        transactionService.add(transaction);
+        TransactionDto transactionDto = getTransactionDto(transaction, account, account);
+        checkService.createCheck(transactionDto);
     }
 
     @Override
-    @Transactional(daoClasses = {AccountDao.class, TransactionDao.class},
+    @Transactional(daoInterfaces = {IAccountDao.class, ITransactionDao.class, IBankDao.class},
             isolation = IsolationLevel.TRANSACTION_SERIALIZABLE)
     @Loggable
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
@@ -60,10 +71,27 @@ public class AccountService implements IAccountService {
                 .orElseThrow(() -> new AccountNotFoundException("account not found"));
         Account accountTo = accountDao.findById(moneyTransferDto.getAccountTo())
                 .orElseThrow(() -> new AccountNotFoundException("account not found"));
+        Transaction transaction = getTransaction(moneyTransferDto);
         sort(moneyTransferDto);
         writeOffMoney(accountFrom, amount);
         addMoney(accountTo, amount);
-        transactionService.add(getTransaction(moneyTransferDto));
+        transactionService.add(transaction);
+        TransactionDto transactionDto = getTransactionDto(transaction, accountFrom, accountTo);
+        checkService.createCheck(transactionDto);
+    }
+
+    private TransactionDto getTransactionDto(Transaction transaction, Account accountFrom, Account accountTo) {
+        TransactionDto transactionDto = modelMapper.map(transaction, TransactionDto.class);
+        transactionDto.setTypeId((short) (transactionDto.getTypeId() - 1));
+        short bankFromId = accountFrom.getBankId();
+        short bankToId = accountTo.getBankId();
+        BankDto bankFrom = bankService.findById(bankFromId);
+        BankDto bankTo = bankFromId == bankToId
+                ? bankFrom
+                : bankService.findById(bankToId);
+        transactionDto.setBankFrom(bankFrom.getName().trim());
+        transactionDto.setBankTo(bankTo.getName().trim());
+        return transactionDto;
     }
 
     private void sort(MoneyTransferDto moneyTransferDto) {

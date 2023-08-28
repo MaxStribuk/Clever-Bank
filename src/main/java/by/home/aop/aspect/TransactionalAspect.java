@@ -28,9 +28,10 @@ public class TransactionalAspect {
             connection.setTransactionIsolation(transactional.isolation().getIsolationLevel());
             connection.setAutoCommit(false);
             savepoint = connection.setSavepoint();
-            for (Class<?> clazz : transactional.daoClasses()) {
-                Method setConn = clazz.getDeclaredMethod("setConn", Connection.class);
-                setConn.invoke(PropertiesUtil.getDaoClass(clazz), connection);
+            for (Class<?> clazz : transactional.daoInterfaces()) {
+                Object daoClass = PropertiesUtil.getDaoClass(clazz);
+                Method setConn = daoClass.getClass().getDeclaredMethod("setConn", Connection.class);
+                setConn.invoke(daoClass, connection);
             }
             Object returnValue = pjp.proceed();
             connection.commit();

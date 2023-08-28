@@ -1,4 +1,4 @@
-package by.home.dao.entity;
+package by.home.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,10 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Transaction implements Serializable {
+public class TransactionDto {
 
     private UUID id;
+    private String bankFrom;
     private String accountFrom;
+    private String bankTo;
     private String accountTo;
     private LocalDateTime time;
     private BigDecimal amount;
