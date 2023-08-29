@@ -13,5 +13,5 @@ public enum IsolationLevel {
     TRANSACTION_REPEATABLE_READ(4),
     TRANSACTION_SERIALIZABLE(8);
 
-    private final int isolationLevel;
+    private final int level;
 }

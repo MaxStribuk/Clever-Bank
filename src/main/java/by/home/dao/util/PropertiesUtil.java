@@ -1,8 +1,10 @@
 package by.home.dao.util;
 
+import by.home.data.exception.PropertiesLoadException;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,14 +17,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import static by.home.dao.util.Constant.Utils.DAO_API_PACKAGE_NAME;
-import static by.home.dao.util.Constant.Utils.DAO_IMPL_PACKAGE_NAME;
-import static by.home.dao.util.Constant.Utils.GET_INSTANCE_METHOD_NAME;
-import static by.home.dao.util.Constant.Utils.PROPERTIES_FILE_NAME;
-import static by.home.dao.util.Constant.Utils.SINGLETON_CLASS_NAME_PATTERN;
+import static by.home.util.Constant.ExceptionMessage.FAILED_LOAD_DAO_CLASSES;
+import static by.home.util.Constant.Utils.DAO_API_PACKAGE_NAME;
+import static by.home.util.Constant.Utils.DAO_IMPL_PACKAGE_NAME;
+import static by.home.util.Constant.Utils.GET_INSTANCE_METHOD_NAME;
+import static by.home.util.Constant.Utils.PROPERTIES_FILE_NAME;
+import static by.home.util.Constant.Utils.SINGLETON_CLASS_NAME_PATTERN;
 
-@Slf4j
-public class PropertiesUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class PropertiesUtil {
 
     private static final Properties PROPERTIES = new Properties();
     private static final Map<Class<?>, Object> DAO_CLASSES = new HashMap<>();
@@ -46,8 +49,7 @@ public class PropertiesUtil {
                 .getResourceAsStream(PROPERTIES_FILE_NAME)) {
             PROPERTIES.load(resourceAsStream);
         } catch (IOException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("failed load " + PROPERTIES_FILE_NAME);
+            throw new PropertiesLoadException("failed load " + PROPERTIES_FILE_NAME, e);
         }
     }
 
@@ -61,7 +63,7 @@ public class PropertiesUtil {
              ScanResult scanDaoInterfacesResult = new ClassGraph()
                      .acceptPackages(DAO_API_PACKAGE_NAME)
                      .enableClassInfo()
-                     .scan();) {
+                     .scan()) {
             classNames = scanDaoImplClassesResult.getAllClasses().getNames();
             interfaceNames = scanDaoInterfacesResult.getAllClasses().getNames();
             fillDaoClassesMap(classNames, new HashSet<>(interfaceNames));
@@ -81,12 +83,11 @@ public class PropertiesUtil {
                 Class<?> daoInterface = Arrays.stream(daoClass.getInterfaces())
                         .filter(x -> interfaceNames.contains(x.getName()))
                         .findFirst()
-                        .orElseGet(null);
+                        .orElseThrow(() -> new PropertiesLoadException(FAILED_LOAD_DAO_CLASSES));
                 DAO_CLASSES.put(daoInterface, daoClassInstance);
             }
         } catch (ReflectiveOperationException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("failed load instance dao classes");
+            throw new PropertiesLoadException(FAILED_LOAD_DAO_CLASSES, e);
         }
     }
 }

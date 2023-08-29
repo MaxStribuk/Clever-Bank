@@ -18,8 +18,8 @@ public class BankService implements IBankService {
     @Override
     @Loggable
     public BankDto findById(short id) {
-        Bank bank = bankDao.findById(id)
+        Bank bank = this.bankDao.findById(id)
                 .orElseThrow(() -> new BankNotFoundException("bank not found: " + id));
-        return modelMapper.map(bank, BankDto.class);
+        return this.modelMapper.map(bank, BankDto.class);
     }
 }

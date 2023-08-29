@@ -31,6 +31,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+import static by.home.util.Constant.ExceptionMessage.ACCOUNT_NOT_FOUND;
+import static by.home.util.Constant.ExceptionMessage.INVALID_BALANCE;
+
 @RequiredArgsConstructor
 public class AccountService implements IAccountService {
 
@@ -47,17 +50,17 @@ public class AccountService implements IAccountService {
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         validate(changeBalanceDto);
         BigDecimal amount = changeBalanceDto.getAmount();
-        Account account = accountDao.findById(changeBalanceDto.getAccount())
-                .orElseThrow(() -> new AccountNotFoundException("account not found"));
+        Account account = this.accountDao.findById(changeBalanceDto.getAccount())
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             writeOffMoney(account, amount);
         } else {
             addMoney(account, amount);
         }
         Transaction transaction = getTransaction(changeBalanceDto);
-        transactionService.add(transaction);
+        this.transactionService.add(transaction);
         TransactionDto transactionDto = getTransactionDto(transaction, account, account);
-        checkService.createCheck(transactionDto);
+        this.checkService.createCheck(transactionDto);
     }
 
     @Override
@@ -67,28 +70,28 @@ public class AccountService implements IAccountService {
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
         validate(moneyTransferDto);
         BigDecimal amount = moneyTransferDto.getAmount();
-        Account accountFrom = accountDao.findById(moneyTransferDto.getAccountFrom())
-                .orElseThrow(() -> new AccountNotFoundException("account not found"));
-        Account accountTo = accountDao.findById(moneyTransferDto.getAccountTo())
-                .orElseThrow(() -> new AccountNotFoundException("account not found"));
+        Account accountFrom = this.accountDao.findById(moneyTransferDto.getAccountFrom())
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
+        Account accountTo = this.accountDao.findById(moneyTransferDto.getAccountTo())
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
         Transaction transaction = getTransaction(moneyTransferDto);
         sort(moneyTransferDto);
         writeOffMoney(accountFrom, amount);
         addMoney(accountTo, amount);
-        transactionService.add(transaction);
+        this.transactionService.add(transaction);
         TransactionDto transactionDto = getTransactionDto(transaction, accountFrom, accountTo);
-        checkService.createCheck(transactionDto);
+        this.checkService.createCheck(transactionDto);
     }
 
     private TransactionDto getTransactionDto(Transaction transaction, Account accountFrom, Account accountTo) {
-        TransactionDto transactionDto = modelMapper.map(transaction, TransactionDto.class);
+        TransactionDto transactionDto = this.modelMapper.map(transaction, TransactionDto.class);
         transactionDto.setTypeId((short) (transactionDto.getTypeId() - 1));
         short bankFromId = accountFrom.getBankId();
         short bankToId = accountTo.getBankId();
-        BankDto bankFrom = bankService.findById(bankFromId);
+        BankDto bankFrom = this.bankService.findById(bankFromId);
         BankDto bankTo = bankFromId == bankToId
                 ? bankFrom
-                : bankService.findById(bankToId);
+                : this.bankService.findById(bankToId);
         transactionDto.setBankFrom(bankFrom.getName().trim());
         transactionDto.setBankTo(bankTo.getName().trim());
         return transactionDto;
@@ -108,21 +111,21 @@ public class AccountService implements IAccountService {
         BigDecimal currentBalance = account.getBalance();
         BigDecimal newBalance = currentBalance.subtract(amount);
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidBalanceException("not enough money on balance");
+            throw new InvalidBalanceException(INVALID_BALANCE);
         }
         account.setBalance(newBalance);
-        accountDao.update(account);
+        this.accountDao.update(account);
     }
 
     private void addMoney(Account account, BigDecimal amount) {
         BigDecimal currentBalance = account.getBalance();
         BigDecimal newBalance = currentBalance.add(amount);
         account.setBalance(newBalance);
-        accountDao.update(account);
+        this.accountDao.update(account);
     }
 
     private void validate(ChangeBalanceDto changeBalanceDto) {
-        Set<ConstraintViolation<ChangeBalanceDto>> violations = validator.validate(changeBalanceDto);
+        Set<ConstraintViolation<ChangeBalanceDto>> violations = this.validator.validate(changeBalanceDto);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
@@ -131,7 +134,7 @@ public class AccountService implements IAccountService {
     }
 
     private void validate(MoneyTransferDto moneyTransferDto) {
-        Set<ConstraintViolation<MoneyTransferDto>> violations = validator.validate(moneyTransferDto);
+        Set<ConstraintViolation<MoneyTransferDto>> violations = this.validator.validate(moneyTransferDto);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
