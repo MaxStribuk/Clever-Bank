@@ -38,6 +38,22 @@ public final class Constant {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class ExceptionMessage {
+
+        public static final String ACCOUNT_NOT_FOUND = "account not found";
+        public static final String INVALID_BALANCE = "not enough money on balance";
+        public static final String INVALID_ACCOUNT_NUMBER = "invalid account number";
+        public static final String ACCOUNT_MUST_BE_POSITIVE = "amount must be positive";
+        public static final String AMOUNT_MUST_BE_POSITIVE_OR_NEGATIVE = "amount must be positive or negative";
+        public static final String INVALID_DIGITS =
+                "the amount must have no more than 8 digits in the integer part and 2 in the fractional";
+        public static final String INVALID_ACCOUNT_TO_NUMBER = "invalid accountTo number";
+        public static final String INVALID_ACCOUNT_FROM_NUMBER = "invalid accountFrom number";
+        public static final String FAILED_LOAD_DAO_CLASSES ="failed load instance dao classes";
+    }
+
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Utils {
 
         public static final String PROPERTIES_FILE_NAME = "application.yml";
@@ -45,6 +61,8 @@ public final class Constant {
         public static final String DB_USERNAME_PROPERTIES_NAME = "username";
         public static final String DB_PASSWORD_PROPERTIES_NAME = "password";
         public static final String SQL_DRIVER_PROPERTIES_NAME = "driver";
+        public static final String ACCOUNT_PATTERN = "^BY13[A-Z]{4}\\d{20}$";
+
         public static final String DAO_IMPL_PACKAGE_NAME = "by.home.dao.impl";
         public static final String DAO_API_PACKAGE_NAME = "by.home.dao.api";
         public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
@@ -67,7 +85,7 @@ public final class Constant {
                         |Счет отправителя:%43s|
                         |Счет получателя:%44s|
                         |Сумма:%50.2f BYN|
-                        |------------------------------------------------------------|  
+                        |------------------------------------------------------------|
                                             """;
     }
 }

@@ -2,6 +2,7 @@ package by.home.aop.aspect;
 
 import by.home.aop.api.Transactional;
 import by.home.dao.util.PropertiesUtil;
+import by.home.data.exception.CustomSqlException;
 import by.home.factory.util.ConnectionSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,7 +28,7 @@ public class TransactionalAspect {
         try {
             connection = ConnectionSingleton.getInstance().open();
             connection.setReadOnly(transactional.readOnly());
-            connection.setTransactionIsolation(transactional.isolation().getIsolationLevel());
+            connection.setTransactionIsolation(transactional.isolation().getLevel());
             connection.setAutoCommit(false);
             savepoint = connection.setSavepoint();
             for (Class<?> clazz : transactional.daoInterfaces()) {
@@ -44,7 +45,7 @@ public class TransactionalAspect {
                 try {
                     connection.rollback(savepoint);
                 } catch (SQLException ex) {
-                    log.error(ex.getMessage());
+                    throw new CustomSqlException(ex.getMessage(), ex);
                 }
             }
         } finally {

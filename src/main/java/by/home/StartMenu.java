@@ -24,7 +24,7 @@ public class StartMenu {
     public void start(String[] args) {
         try {
             chooseOperation(args);
-            System.out.println("Operation successful complete");
+            log.info("Operation successful complete");
         } catch (NumberFormatException e) {
             log.error("invalid BigDecimal");
         } catch (ConstraintViolationException e) {

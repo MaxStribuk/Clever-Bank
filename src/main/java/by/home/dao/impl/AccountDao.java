@@ -2,6 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
+import by.home.data.exception.CustomSqlException;
 import lombok.Setter;
 
 import java.sql.Connection;
@@ -37,7 +38,7 @@ public class AccountDao implements IAccountDao {
                         : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 
@@ -48,7 +49,7 @@ public class AccountDao implements IAccountDao {
             statement.setString(2, account.getNumber());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 

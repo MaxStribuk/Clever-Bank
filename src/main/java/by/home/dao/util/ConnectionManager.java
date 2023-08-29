@@ -40,7 +40,7 @@ public class ConnectionManager implements IConnection {
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         cpds.close();
     }
 }

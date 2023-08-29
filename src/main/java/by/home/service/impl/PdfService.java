@@ -1,6 +1,7 @@
 package by.home.service.impl;
 
 import by.home.aop.api.Loggable;
+import by.home.data.exception.PdfException;
 import by.home.service.api.IPdfService;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Font;
@@ -34,8 +35,7 @@ public class PdfService implements IPdfService {
                 document.add(new Paragraph(line, font));
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new PdfException(e.getMessage(), e);
         } finally {
             if (document != null) {
                 document.close();
@@ -45,7 +45,6 @@ public class PdfService implements IPdfService {
                     outputStream.close();
                 } catch (IOException e) {
                     log.error(e.getMessage());
-                    throw new RuntimeException(e);
                 }
             }
         }

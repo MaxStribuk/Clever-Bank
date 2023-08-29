@@ -15,6 +15,13 @@ import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import static by.home.util.Constant.ExceptionMessage.ACCOUNT_MUST_BE_POSITIVE;
+import static by.home.util.Constant.ExceptionMessage.INVALID_ACCOUNT_FROM_NUMBER;
+import static by.home.util.Constant.ExceptionMessage.INVALID_ACCOUNT_NUMBER;
+import static by.home.util.Constant.ExceptionMessage.INVALID_ACCOUNT_TO_NUMBER;
+import static by.home.util.Constant.ExceptionMessage.INVALID_DIGITS;
+import static by.home.util.Constant.Utils.ACCOUNT_PATTERN;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -23,17 +30,16 @@ import java.math.BigDecimal;
 @ToString
 public class MoneyTransferDto implements Serializable {
 
-    @Pattern(regexp = "^BY13[A-Z]{4}[0-9]{20}$", message = "invalid account number")
-    @NotBlank(message = "invalid accountFrom number")
+    @Pattern(regexp = ACCOUNT_PATTERN, message = INVALID_ACCOUNT_NUMBER)
+    @NotBlank(message = INVALID_ACCOUNT_FROM_NUMBER)
     private String accountFrom;
 
-    @Pattern(regexp = "^BY13[A-Z]{4}[0-9]{20}$", message = "invalid account number")
-    @NotBlank(message = "invalid accountTo number")
+    @Pattern(regexp = ACCOUNT_PATTERN, message = INVALID_ACCOUNT_NUMBER)
+    @NotBlank(message = INVALID_ACCOUNT_TO_NUMBER)
     private String accountTo;
 
-    @NotNull(message = "amount must be positive")
-    @Digits(integer = 8, fraction = 2,
-            message = "the amount must have no more than 8 digits in the integer part and 2 in the fractional")
-    @Positive(message = "amount must be positive")
+    @NotNull(message = ACCOUNT_MUST_BE_POSITIVE)
+    @Digits(integer = 8, fraction = 2, message = INVALID_DIGITS)
+    @Positive(message = ACCOUNT_MUST_BE_POSITIVE)
     private BigDecimal amount;
 }

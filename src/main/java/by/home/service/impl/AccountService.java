@@ -31,6 +31,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+import static by.home.util.Constant.ExceptionMessage.ACCOUNT_NOT_FOUND;
+import static by.home.util.Constant.ExceptionMessage.INVALID_BALANCE;
+
 @RequiredArgsConstructor
 public class AccountService implements IAccountService {
 
@@ -48,7 +51,7 @@ public class AccountService implements IAccountService {
         validate(changeBalanceDto);
         BigDecimal amount = changeBalanceDto.getAmount();
         Account account = this.accountDao.findById(changeBalanceDto.getAccount())
-                .orElseThrow(() -> new AccountNotFoundException("account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             writeOffMoney(account, amount);
         } else {
@@ -68,9 +71,9 @@ public class AccountService implements IAccountService {
         validate(moneyTransferDto);
         BigDecimal amount = moneyTransferDto.getAmount();
         Account accountFrom = this.accountDao.findById(moneyTransferDto.getAccountFrom())
-                .orElseThrow(() -> new AccountNotFoundException("account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
         Account accountTo = this.accountDao.findById(moneyTransferDto.getAccountTo())
-                .orElseThrow(() -> new AccountNotFoundException("account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
         Transaction transaction = getTransaction(moneyTransferDto);
         sort(moneyTransferDto);
         writeOffMoney(accountFrom, amount);
@@ -108,7 +111,7 @@ public class AccountService implements IAccountService {
         BigDecimal currentBalance = account.getBalance();
         BigDecimal newBalance = currentBalance.subtract(amount);
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidBalanceException("not enough money on balance");
+            throw new InvalidBalanceException(INVALID_BALANCE);
         }
         account.setBalance(newBalance);
         this.accountDao.update(account);

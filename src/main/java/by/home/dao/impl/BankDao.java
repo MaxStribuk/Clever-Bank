@@ -2,6 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.IBankDao;
 import by.home.dao.entity.Bank;
+import by.home.data.exception.CustomSqlException;
 import lombok.Setter;
 
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class BankDao implements IBankDao {
                         : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 

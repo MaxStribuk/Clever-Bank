@@ -14,6 +14,11 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import static by.home.util.Constant.ExceptionMessage.AMOUNT_MUST_BE_POSITIVE_OR_NEGATIVE;
+import static by.home.util.Constant.ExceptionMessage.INVALID_ACCOUNT_NUMBER;
+import static by.home.util.Constant.ExceptionMessage.INVALID_DIGITS;
+import static by.home.util.Constant.Utils.ACCOUNT_PATTERN;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -22,12 +27,11 @@ import java.math.BigDecimal;
 @ToString
 public class ChangeBalanceDto implements Serializable {
 
-    @Pattern(regexp = "^BY13[A-Z]{4}[0-9]{20}$", message = "invalid account number")
-    @NotBlank(message = "invalid account number")
+    @Pattern(regexp = ACCOUNT_PATTERN, message = INVALID_ACCOUNT_NUMBER)
+    @NotBlank(message = INVALID_ACCOUNT_NUMBER)
     private String account;
 
-    @NotNull(message = "amount must be positive or negative")
-    @Digits(integer = 8, fraction = 2,
-            message = "the amount must have no more than 8 digits in the integer part and 2 in the fractional")
+    @NotNull(message = AMOUNT_MUST_BE_POSITIVE_OR_NEGATIVE)
+    @Digits(integer = 8, fraction = 2, message = INVALID_DIGITS)
     private BigDecimal amount;
 }

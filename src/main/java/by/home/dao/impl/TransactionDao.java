@@ -2,6 +2,7 @@ package by.home.dao.impl;
 
 import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Transaction;
+import by.home.data.exception.CustomSqlException;
 import lombok.Setter;
 
 import java.sql.Connection;
@@ -43,7 +44,7 @@ public class TransactionDao implements ITransactionDao {
                         : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 
@@ -60,7 +61,7 @@ public class TransactionDao implements ITransactionDao {
                 return transactions;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 
@@ -75,7 +76,7 @@ public class TransactionDao implements ITransactionDao {
                 return transactions;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 
@@ -90,7 +91,7 @@ public class TransactionDao implements ITransactionDao {
             statement.setShort(6, transaction.getTypeId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new CustomSqlException(e.getMessage(), e);
         }
     }
 

@@ -1,6 +1,8 @@
 package by.home.util;
 
 import by.home.data.dto.ErrorDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -9,7 +11,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class ConstraintViolationUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ConstraintViolationUtil {
 
     public static List<ErrorDto> getErrors(Set<ConstraintViolation<?>> violations) {
         return violations.stream()
