@@ -1,6 +1,7 @@
 package by.home.controller.listener;
 
 import by.home.factory.util.ConnectionSingleton;
+import by.home.factory.util.ExecutorManagerSingleton;
 import by.home.factory.util.ValidationManagerSingleton;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -14,6 +15,7 @@ public class AppContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         ConnectionSingleton.getInstance().init();
+        ExecutorManagerSingleton.getInstance().init();
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
@@ -21,6 +23,7 @@ public class AppContextListener implements ServletContextListener {
         try {
             ValidationManagerSingleton.getInstance().close();
             ConnectionSingleton.getInstance().close();
+            ExecutorManagerSingleton.getInstance().destroy();
         } catch (Exception e) {
             log.error(e.getMessage());
         }
