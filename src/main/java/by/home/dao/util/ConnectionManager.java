@@ -1,6 +1,7 @@
 package by.home.dao.util;
 
 import by.home.dao.api.IConnection;
+import by.home.util.PropertiesUtil;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.extern.slf4j.Slf4j;
 

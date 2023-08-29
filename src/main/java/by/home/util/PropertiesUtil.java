@@ -1,4 +1,4 @@
-package by.home.dao.util;
+package by.home.util;
 
 import by.home.data.exception.PropertiesLoadException;
 import io.github.classgraph.ClassGraph;
