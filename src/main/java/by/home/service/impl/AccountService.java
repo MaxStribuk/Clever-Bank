@@ -20,6 +20,7 @@ import by.home.service.api.IAccountService;
 import by.home.service.api.IBankService;
 import by.home.service.api.ICheckService;
 import by.home.service.api.ITransactionService;
+import by.home.util.PropertiesUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
@@ -27,12 +28,16 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static by.home.util.Constant.ExceptionMessage.ACCOUNT_NOT_FOUND;
 import static by.home.util.Constant.ExceptionMessage.INVALID_BALANCE;
+import static by.home.util.Constant.Utils.HUNDRED_PERCENT;
+import static by.home.util.Constant.Utils.PERCENT_PROPERTY_NAME;
 
 @RequiredArgsConstructor
 public class AccountService implements IAccountService {
@@ -81,6 +86,30 @@ public class AccountService implements IAccountService {
         this.transactionService.add(transaction);
         TransactionDto transactionDto = getTransactionDto(transaction, accountFrom, accountTo);
         this.checkService.createCheck(transactionDto);
+    }
+
+    @Override
+    @Loggable
+    @Transactional(readOnly = true, daoInterfaces = IAccountDao.class)
+    public List<Account> getAccountsForInterestAccrual(int count) {
+        return this.accountDao.getAccountsForInterestAccrual(count);
+    }
+
+    @Override
+    @Loggable
+    @Transactional(daoInterfaces = IAccountDao.class)
+    public void interestAccrual(Account account) {
+        if (!account.isInterestAccrued()) {
+            BigDecimal currentBalance = account.getBalance();
+            BigDecimal percent = new BigDecimal(PropertiesUtil.getProperty(PERCENT_PROPERTY_NAME));
+            BigDecimal newBalance = currentBalance
+                    .multiply(HUNDRED_PERCENT
+                            .add(percent)
+                            .divide(HUNDRED_PERCENT, RoundingMode.HALF_UP));
+            account.setBalance(newBalance);
+            account.setInterestAccrued(true);
+            this.accountDao.update(account);
+        }
     }
 
     private TransactionDto getTransactionDto(Transaction transaction, Account accountFrom, Account accountTo) {
