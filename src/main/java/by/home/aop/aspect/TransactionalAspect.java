@@ -22,7 +22,7 @@ public class TransactionalAspect {
 
     @Around("@annotation(transactional)")
     public Object handleAnnotationTransactionalAdvice(
-            ProceedingJoinPoint pjp, Transactional transactional) {
+            ProceedingJoinPoint pjp, Transactional transactional) throws Throwable {
         Connection connection = null;
         Savepoint savepoint = null;
         try {
@@ -48,6 +48,7 @@ public class TransactionalAspect {
                     throw new CustomSqlException(ex.getMessage(), ex);
                 }
             }
+            throw e;
         } finally {
             if (connection != null) {
                 try {
@@ -57,6 +58,5 @@ public class TransactionalAspect {
                 }
             }
         }
-        return null;
     }
 }

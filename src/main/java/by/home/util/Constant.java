@@ -29,6 +29,7 @@ public final class Constant {
         public static final String BANK_ID = "bank_id";
         public static final String OPEN_DATE = "open_date";
         public static final String ID = "id";
+        public static final String ACCOUNT = "account";
         public static final String ACCOUNT_FROM = "account_from";
         public static final String ACCOUNT_TO = "account_to";
         public static final String TYPE_ID = "type_id";
@@ -62,7 +63,7 @@ public final class Constant {
         public static final String DB_PASSWORD_PROPERTIES_NAME = "password";
         public static final String SQL_DRIVER_PROPERTIES_NAME = "driver";
         public static final String ACCOUNT_PATTERN = "^BY13[A-Z]{4}\\d{20}$";
-
+        public static final String OPERATION_SUCCESSFUL = "Operation successful complete";
         public static final String DAO_IMPL_PACKAGE_NAME = "by.home.dao.impl";
         public static final String DAO_API_PACKAGE_NAME = "by.home.dao.api";
         public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
