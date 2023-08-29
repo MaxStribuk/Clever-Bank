@@ -1,7 +1,6 @@
 package by.home.aop.aspect;
 
 import by.home.aop.api.Loggable;
-import by.home.data.exception.AspectException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
