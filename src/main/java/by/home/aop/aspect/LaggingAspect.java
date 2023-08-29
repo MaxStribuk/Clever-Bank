@@ -21,20 +21,20 @@ import static by.home.util.Constant.Utils.LOGGING_MESSAGE_PATTERN;
 public class LaggingAspect {
 
     @Around("@annotation(loggable)")
-    public Object handleAnnotationLoggableAdvice(ProceedingJoinPoint pjp, Loggable loggable) {
+    public Object handleAnnotationLoggableAdvice(ProceedingJoinPoint pjp, Loggable loggable) throws Throwable {
         Object returnValue;
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(LOGGING_FILE_NAME, true))) {
             String argsString = Arrays.toString(pjp.getArgs());
             Signature signature = pjp.getSignature();
             returnValue = pjp.proceed();
             printWriter.printf(LOGGING_MESSAGE_PATTERN, signature, argsString, returnValue);
+            return returnValue;
         } catch (IOException e) {
             log.error("error while working with file " + LOGGING_FILE_NAME);
-            throw new AspectException(e);
+            throw e;
         } catch (Throwable e) {
             log.error("error in LoggingAspect");
-            throw new AspectException(e);
+            throw e;
         }
-        return returnValue;
     }
 }

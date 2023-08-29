@@ -15,6 +15,8 @@ import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static by.home.util.Constant.Utils.OPERATION_SUCCESSFUL;
+
 @Slf4j
 @RequiredArgsConstructor
 public class StartMenu {
@@ -24,7 +26,7 @@ public class StartMenu {
     public void start(String[] args) {
         try {
             chooseOperation(args);
-            log.info("Operation successful complete");
+            log.info(OPERATION_SUCCESSFUL);
         } catch (NumberFormatException e) {
             log.error("invalid BigDecimal");
         } catch (ConstraintViolationException e) {
