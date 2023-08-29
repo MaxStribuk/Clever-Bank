@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 
+import static by.home.util.Constant.Utils.SET_CONN_METHOD_NAME;
+
 @Aspect
 @Slf4j
 public class TransactionalAspect {
@@ -30,7 +32,7 @@ public class TransactionalAspect {
             savepoint = connection.setSavepoint();
             for (Class<?> clazz : transactional.daoInterfaces()) {
                 Object daoClass = PropertiesUtil.getDaoClass(clazz);
-                Method setConn = daoClass.getClass().getDeclaredMethod("setConn", Connection.class);
+                Method setConn = daoClass.getClass().getDeclaredMethod(SET_CONN_METHOD_NAME, Connection.class);
                 setConn.invoke(daoClass, connection);
             }
             Object returnValue = pjp.proceed();

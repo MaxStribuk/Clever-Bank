@@ -1,4 +1,4 @@
-package by.home.service.util;
+package by.home.util;
 
 import by.home.data.dto.ErrorDto;
 

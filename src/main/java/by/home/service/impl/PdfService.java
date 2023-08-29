@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static by.home.dao.util.Constant.Utils.FONT_COURIER_NEW_PATH;
+import static by.home.util.Constant.Utils.FONT_COURIER_NEW_PATH;
 
 @Slf4j
 public class PdfService implements IPdfService {

@@ -4,11 +4,11 @@ import by.home.data.dto.ChangeBalanceDto;
 import by.home.data.dto.ErrorDto;
 import by.home.data.dto.MoneyTransferDto;
 import by.home.data.exception.InvalidArgsException;
-import by.home.factory.service.AccountServiceSingleton;
 import by.home.factory.util.ConnectionSingleton;
 import by.home.factory.util.ValidationManagerSingleton;
 import by.home.service.api.IAccountService;
-import by.home.service.util.ConstraintViolationUtil;
+import by.home.util.ConstraintViolationUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintViolationException;
@@ -16,13 +16,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 public class StartMenu {
 
     private final IAccountService accountService;
-
-    public StartMenu() {
-        accountService = AccountServiceSingleton.getInstance();
-    }
 
     public void start(String[] args) {
         try {
@@ -49,13 +46,13 @@ public class StartMenu {
     }
 
     private void transferMoney(String[] args) {
-        accountService.transferMoney(
+        this.accountService.transferMoney(
                 new MoneyTransferDto(args[0], args[1], new BigDecimal(args[2]))
         );
     }
 
     private void changeBalance(String[] args) {
-        accountService.changeBalance(
+        this.accountService.changeBalance(
                 new ChangeBalanceDto(args[0], new BigDecimal(args[1]))
         );
     }

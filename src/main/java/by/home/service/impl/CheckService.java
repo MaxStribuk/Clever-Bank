@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 
-import static by.home.dao.util.Constant.Utils.CHECK_FILE_NAME;
-import static by.home.dao.util.Constant.Utils.CHECK_TEMPLATE;
-import static by.home.dao.util.Constant.Utils.DATE_PATTERN;
+import static by.home.util.Constant.Utils.CHECK_FILE_NAME;
+import static by.home.util.Constant.Utils.CHECK_TEMPLATE;
+import static by.home.util.Constant.Utils.DATE_PATTERN;
 
 @RequiredArgsConstructor
 public class CheckService implements ICheckService {
@@ -24,7 +24,7 @@ public class CheckService implements ICheckService {
         String transactionId = transaction.getId().toString();
         String fileName = String.format(CHECK_FILE_NAME, transactionId);
         String formattedCheck = getFormattedCheck(transaction, transactionId);
-        pdfService.createPdf(formattedCheck, fileName);
+        this.pdfService.createPdf(formattedCheck, fileName);
     }
 
     private String getFormattedCheck(TransactionDto transaction, String transactionId) {

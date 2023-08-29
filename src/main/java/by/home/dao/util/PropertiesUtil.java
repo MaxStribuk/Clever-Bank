@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import static by.home.dao.util.Constant.Utils.DAO_API_PACKAGE_NAME;
-import static by.home.dao.util.Constant.Utils.DAO_IMPL_PACKAGE_NAME;
-import static by.home.dao.util.Constant.Utils.GET_INSTANCE_METHOD_NAME;
-import static by.home.dao.util.Constant.Utils.PROPERTIES_FILE_NAME;
-import static by.home.dao.util.Constant.Utils.SINGLETON_CLASS_NAME_PATTERN;
+import static by.home.util.Constant.Utils.DAO_API_PACKAGE_NAME;
+import static by.home.util.Constant.Utils.DAO_IMPL_PACKAGE_NAME;
+import static by.home.util.Constant.Utils.GET_INSTANCE_METHOD_NAME;
+import static by.home.util.Constant.Utils.PROPERTIES_FILE_NAME;
+import static by.home.util.Constant.Utils.SINGLETON_CLASS_NAME_PATTERN;
 
 @Slf4j
 public class PropertiesUtil {

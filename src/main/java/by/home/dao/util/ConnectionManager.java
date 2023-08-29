@@ -8,13 +8,14 @@ import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static by.home.util.Constant.Utils.DB_PASSWORD_PROPERTIES_NAME;
+import static by.home.util.Constant.Utils.DB_URL_PROPERTIES_NAME;
+import static by.home.util.Constant.Utils.DB_USERNAME_PROPERTIES_NAME;
+import static by.home.util.Constant.Utils.SQL_DRIVER_PROPERTIES_NAME;
+
 @Slf4j
 public class ConnectionManager implements IConnection {
 
-    private final String URL = "url";
-    private final String USERNAME = "username";
-    private final String PASSWORD = "password";
-    private final String DRIVER = "driver";
     private final ComboPooledDataSource cpds;
 
     public ConnectionManager() {
@@ -24,13 +25,13 @@ public class ConnectionManager implements IConnection {
 
     private void loadDriver() {
         try {
-            cpds.setDriverClass(PropertiesUtil.getProperty(DRIVER));
+            cpds.setDriverClass(PropertiesUtil.getProperty(SQL_DRIVER_PROPERTIES_NAME));
         } catch (PropertyVetoException e) {
             log.error(e.getMessage());
         }
-        cpds.setJdbcUrl(PropertiesUtil.getProperty(URL));
-        cpds.setUser(PropertiesUtil.getProperty(USERNAME));
-        cpds.setPassword(PropertiesUtil.getProperty(PASSWORD));
+        cpds.setJdbcUrl(PropertiesUtil.getProperty(DB_URL_PROPERTIES_NAME));
+        cpds.setUser(PropertiesUtil.getProperty(DB_USERNAME_PROPERTIES_NAME));
+        cpds.setPassword(PropertiesUtil.getProperty(DB_PASSWORD_PROPERTIES_NAME));
     }
 
     @Override

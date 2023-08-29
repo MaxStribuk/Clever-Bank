@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import static by.home.dao.util.Constant.Utils.LOGGING_FILE_NAME;
-import static by.home.dao.util.Constant.Utils.LOGGING_MESSAGE_PATTERN;
+import static by.home.util.Constant.Utils.LOGGING_FILE_NAME;
+import static by.home.util.Constant.Utils.LOGGING_MESSAGE_PATTERN;
 
 @Aspect
 @Slf4j

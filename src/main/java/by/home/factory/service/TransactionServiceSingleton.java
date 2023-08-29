@@ -15,8 +15,7 @@ public class TransactionServiceSingleton {
         if (instance == null) {
             synchronized (TransactionServiceSingleton.class) {
                 if (instance == null) {
-                    instance = new TransactionService(
-                            TransactionDaoSingleton.getInstance());
+                    instance = new TransactionService(TransactionDaoSingleton.getInstance());
                 }
             }
         }
