@@ -3,6 +3,7 @@ package by.home.dao.impl;
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
 import by.home.data.exception.CustomSqlException;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Connection;
@@ -25,6 +26,7 @@ import static by.home.util.Constant.SqlQuery.FIND_ACCOUNT_BY_ACCOUNT_NUMBER;
 import static by.home.util.Constant.SqlQuery.UPDATE_ACCOUNT;
 
 @Setter
+@Getter
 public class AccountDao implements IAccountDao {
 
     private Connection conn;

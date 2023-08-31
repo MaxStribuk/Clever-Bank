@@ -3,6 +3,7 @@ package by.home.dao.impl;
 import by.home.dao.api.IBankDao;
 import by.home.dao.entity.Bank;
 import by.home.data.exception.CustomSqlException;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Connection;
@@ -16,6 +17,7 @@ import static by.home.util.Constant.ColumnName.NAME;
 import static by.home.util.Constant.SqlQuery.FIND_BANK_BY_BANK_ID;
 
 @Setter
+@Getter
 public class BankDao implements IBankDao {
 
     private Connection conn;
