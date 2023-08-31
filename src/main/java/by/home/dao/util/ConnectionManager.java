@@ -17,9 +17,9 @@ import static by.home.util.Constant.Utils.SQL_DRIVER_PROPERTIES_NAME;
 @Slf4j
 public class ConnectionManager implements IConnection {
 
-    private ComboPooledDataSource cpds;
+    private final ComboPooledDataSource cpds;
 
-    public void init() {
+    public ConnectionManager() {
         cpds = new ComboPooledDataSource();
         loadDriver();
     }

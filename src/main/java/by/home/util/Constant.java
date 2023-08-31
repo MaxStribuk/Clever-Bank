@@ -77,7 +77,7 @@ public final class Constant {
         public static final String LOGGING_FILE_NAME = "logging.txt";
         public static final String LOGGING_MESSAGE_PATTERN = "Method %s args %s return value %s\n";
         public static final String DATE_PATTERN = "dd-MM-yyyy";
-        public static final String CHECK_FILE_NAME = "check/%s.pdf";
+        public static final String CHECK_FILE_NAME = "/check/%s.pdf";
         public static final String FONT_COURIER_NEW_PATH = "/fonts/courier-new.ttf";
         public static final String CHECK_TEMPLATE = """
                         --------------------------------------------------------------

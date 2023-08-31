@@ -14,7 +14,7 @@ public class AppContextListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
-        ConnectionSingleton.getInstance().init();
+        ConnectionSingleton.getInstance();
         ExecutorManagerSingleton.getInstance().init();
     }
 
