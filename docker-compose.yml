@@ -1,0 +1,30 @@
+version: '3.5'
+services:
+  db:
+    build: postgresql
+    image: clever-bank-postgresql:1.0.0
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: CleverBank
+
+  pgadmin:
+    build: pgadmin
+    image: clever-bank-pgadmin:1.0.0
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mymail@mail.ru
+      PGADMIN_DEFAULT_PASSWORD: secretPassword
+    ports:
+      - "82:80"
+
+  tomcat:
+    build: tomcat
+    image: clever-bank-tomcat:1.0.0
+    restart: always
+    ports:
+      - "8082:8080"
+    depends_on:
+      - db
+      - pgadmin
