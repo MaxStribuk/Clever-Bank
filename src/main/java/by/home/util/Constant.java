@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constant {
@@ -16,12 +17,11 @@ public final class Constant {
                 "SELECT * FROM account WHERE interest_accrued=? LIMIT ?;";
         public static final String FIND_BANK_BY_BANK_ID = "SELECT * FROM bank WHERE id=?;";
         public static final String UPDATE_ACCOUNT = "UPDATE account SET balance=?, interest_accrued=? WHERE number=?;";
-        public static final String FIND_TRANSACTION_BY_TRANSACTION_ID = "SELECT * FROM transaction WHERE id=?;";
         public static final String FIND_TRANSACTION_BY_ACCOUNT =
-                "SELECT * FROM transaction WHERE account_from=? OR account_to=?;";
-        public static final String FIND_ALL_TRANSACTION = "SELECT * FROM transaction;";
+                "SELECT * FROM transaction WHERE time::date>=? AND time::date<=? AND (account_from=? OR account_to=?);";
         public static final String INSERT_TRANSACTION = "INSERT INTO transaction " +
                 "(id, account_from, account_to, amount, time, type_id) VALUES (?,?,?,?,?,?);";
+        public static final String FIND_CLIENT_BY_ID = "SELECT * FROM client WHERE id=?;";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -40,6 +40,7 @@ public final class Constant {
         public static final String AMOUNT = "amount";
         public static final String TIME = "time";
         public static final String NAME = "name";
+        public static final String PASSPORT_NUMBER = "passport_number";
         public static final String INTEREST_ACCRUED = "interest_accrued";
     }
 
@@ -56,6 +57,8 @@ public final class Constant {
         public static final String INVALID_ACCOUNT_TO_NUMBER = "invalid accountTo number";
         public static final String INVALID_ACCOUNT_FROM_NUMBER = "invalid accountFrom number";
         public static final String FAILED_LOAD_DAO_CLASSES ="failed load instance dao classes";
+        public static final String INVALID_DATE = "date must be in the past or present";
+        public static final String INVALID_DETAILED_PARAMETER = "detail parameter is required";
     }
 
 
@@ -73,11 +76,13 @@ public final class Constant {
         public static final String DAO_API_PACKAGE_NAME = "by.home.dao.api";
         public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
         public static final String SET_CONN_METHOD_NAME = "setConn";
+        public static final String GET_CONN_METHOD_NAME = "getConn";
         public static final String SINGLETON_CLASS_NAME_PATTERN = "by.home.factory.dao.%sSingleton";
         public static final String LOGGING_FILE_NAME = "logging.txt";
         public static final String LOGGING_MESSAGE_PATTERN = "Method %s args %s return value %s\n";
         public static final String DATE_PATTERN = "dd-MM-yyyy";
-        public static final String CHECK_FILE_NAME = "/check/%s.pdf";
+        public static final String CHECK_FILE_NAME = "check/%s.pdf";
+        public static final String STATEMENT_FILE_NAME = "statement-money/%s_%s.pdf";
         public static final String FONT_COURIER_NEW_PATH = "/fonts/courier-new.ttf";
         public static final String CHECK_TEMPLATE = """
                         --------------------------------------------------------------
@@ -99,5 +104,39 @@ public final class Constant {
         public static final long INITIAL_DELAY = 30L;
         public static final String PERCENT_PROPERTY_NAME = "percents";
         public static final BigDecimal HUNDRED_PERCENT = BigDecimal.valueOf(100);
+        public static final String DATE_FROM = "dateFrom";
+        public static final String DATE_TO = "dateTo";
+        public static final String DETAILED_FLAG = "detailed";
+        public static final String GENERAL_STATEMENT_TEMPLATE = """
+                                            Money statement
+                        %30s
+                        Клиент                    | %s
+                        Счет                      | %s
+                        Валюта                    | BYN
+                        Дата открытия             | %s
+                        Период                    | %s - %s
+                        Дата и время формирования | %s
+                        Остаток                   | %s BYN
+                                     Приход       |       Уход
+                        --------------------------------------------------------
+                        %21s BYN | %s BYN
+                                            """;
+        public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        public static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd hh-mm-ss");
+        public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy, kk.mm");
+        public static final String DETAILED_STATEMENT_TEMPLATE = """
+                                                   Выписка
+                        %30s
+                        Клиент                    | %s
+                        Счет                      | %s
+                        Валюта                    | BYN
+                        Дата открытия             | %s
+                        Период                    | %s - %s
+                        Дата и время формирования | %s
+                        Остаток                   | %s BYN
+                            Дата   |     Примечание       |       Сумма
+                        --------------------------------------------------------
+                                            """;
+        public static final String TRANSACTION_TEMPLATE = "%s | %-20s | %s BYN\n";
     }
 }
