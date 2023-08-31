@@ -9,11 +9,13 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 
+import static by.home.util.Constant.Utils.GET_CONN_METHOD_NAME;
 import static by.home.util.Constant.Utils.SET_CONN_METHOD_NAME;
 
 @Aspect
@@ -32,9 +34,7 @@ public class TransactionalAspect {
             connection.setAutoCommit(false);
             savepoint = connection.setSavepoint();
             for (Class<?> clazz : transactional.daoInterfaces()) {
-                Object daoClass = PropertiesUtil.getDaoClass(clazz);
-                Method setConn = daoClass.getClass().getDeclaredMethod(SET_CONN_METHOD_NAME, Connection.class);
-                setConn.invoke(daoClass, connection);
+                setConnections(clazz, connection);
             }
             Object returnValue = pjp.proceed();
             connection.commit();
@@ -57,6 +57,17 @@ public class TransactionalAspect {
                     log.error(e.getMessage());
                 }
             }
+        }
+    }
+
+    private void setConnections(Class<?> clazz, Connection connection)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, SQLException {
+        Object daoClass = PropertiesUtil.getDaoClass(clazz);
+        Method getConn = daoClass.getClass().getDeclaredMethod(GET_CONN_METHOD_NAME);
+        Connection invoked = (Connection) getConn.invoke(daoClass);
+        if (invoked == null || invoked.isClosed()) {
+            Method setConn = daoClass.getClass().getDeclaredMethod(SET_CONN_METHOD_NAME, Connection.class);
+            setConn.invoke(daoClass, connection);
         }
     }
 }
