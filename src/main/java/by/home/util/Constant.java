@@ -3,6 +3,8 @@ package by.home.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constant {
 
@@ -10,8 +12,10 @@ public final class Constant {
     public static final class SqlQuery {
 
         public static final String FIND_ACCOUNT_BY_ACCOUNT_NUMBER = "SELECT * FROM account WHERE number=?;";
+        public static final String FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL =
+                "SELECT * FROM account WHERE interest_accrued=? LIMIT ?;";
         public static final String FIND_BANK_BY_BANK_ID = "SELECT * FROM bank WHERE id=?;";
-        public static final String UPDATE_ACCOUNT = "UPDATE account SET balance=? WHERE number=?;";
+        public static final String UPDATE_ACCOUNT = "UPDATE account SET balance=?, interest_accrued=? WHERE number=?;";
         public static final String FIND_TRANSACTION_BY_TRANSACTION_ID = "SELECT * FROM transaction WHERE id=?;";
         public static final String FIND_TRANSACTION_BY_ACCOUNT =
                 "SELECT * FROM transaction WHERE account_from=? OR account_to=?;";
@@ -36,6 +40,7 @@ public final class Constant {
         public static final String AMOUNT = "amount";
         public static final String TIME = "time";
         public static final String NAME = "name";
+        public static final String INTEREST_ACCRUED = "interest_accrued";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -72,7 +77,7 @@ public final class Constant {
         public static final String LOGGING_FILE_NAME = "logging.txt";
         public static final String LOGGING_MESSAGE_PATTERN = "Method %s args %s return value %s\n";
         public static final String DATE_PATTERN = "dd-MM-yyyy";
-        public static final String CHECK_FILE_NAME = "check/%s.pdf";
+        public static final String CHECK_FILE_NAME = "/check/%s.pdf";
         public static final String FONT_COURIER_NEW_PATH = "/fonts/courier-new.ttf";
         public static final String CHECK_TEMPLATE = """
                         --------------------------------------------------------------
@@ -88,5 +93,11 @@ public final class Constant {
                         |Сумма:%50.2f BYN|
                         |------------------------------------------------------------|
                                             """;
+        public static final int EXECUTOR_CORE_POOL_SIZE = 4;
+        public static final int ACCOUNTS_FOR_INTEREST_ACCRUAL = 100;
+        public static final long DELAY_BETWEEN_SHIPMENTS = 30L;
+        public static final long INITIAL_DELAY = 30L;
+        public static final String PERCENT_PROPERTY_NAME = "percents";
+        public static final BigDecimal HUNDRED_PERCENT = BigDecimal.valueOf(100);
     }
 }

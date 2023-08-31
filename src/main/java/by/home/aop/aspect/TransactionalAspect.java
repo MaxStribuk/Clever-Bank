@@ -1,7 +1,7 @@
 package by.home.aop.aspect;
 
 import by.home.aop.api.Transactional;
-import by.home.dao.util.PropertiesUtil;
+import by.home.util.PropertiesUtil;
 import by.home.data.exception.CustomSqlException;
 import by.home.factory.util.ConnectionSingleton;
 import lombok.extern.slf4j.Slf4j;

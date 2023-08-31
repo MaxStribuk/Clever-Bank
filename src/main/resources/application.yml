@@ -3,3 +3,4 @@ url: jdbc:postgresql://localhost:5432/CleverBank?stringtype=unspecified
 driver: org.postgresql.Driver
 username: postgres
 password: postgres
+percents: 1

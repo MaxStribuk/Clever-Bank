@@ -21,11 +21,12 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.account
 (
-    number     character(28)               NOT NULL,
-    balance    numeric(10, 2) DEFAULT 0.00 NOT NULL,
-    client_id  uuid                        NOT NULL,
-    bank_id    smallint                    NOT NULL,
-    open_date  date                        NOT NULL
+    number           character(28) NOT NULL,
+    balance          numeric(10, 2)         DEFAULT 0.00 NOT NULL,
+    client_id        uuid          NOT NULL,
+    bank_id          smallint      NOT NULL,
+    open_date        date          NOT NULL,
+    interest_accrued boolean       NOT NULL DEFAULT false
 );
 
 ALTER TABLE public.account
@@ -65,11 +66,11 @@ ALTER TABLE public.client
 
 CREATE TABLE public.transaction
 (
-    id           uuid                        NOT NULL,
-    type_id      smallint                    NOT NULL,
+    id           uuid                           NOT NULL,
+    type_id      smallint                       NOT NULL,
     account_from character(28),
     account_to   character(28),
-    amount       numeric(10, 2)              NOT NULL,
+    amount       numeric(10, 2)                 NOT NULL,
     "time"       timestamp(0) without time zone NOT NULL
 );
 

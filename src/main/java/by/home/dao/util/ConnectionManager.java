@@ -1,6 +1,7 @@
 package by.home.dao.util;
 
 import by.home.dao.api.IConnection;
+import by.home.util.PropertiesUtil;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,9 +17,9 @@ import static by.home.util.Constant.Utils.SQL_DRIVER_PROPERTIES_NAME;
 @Slf4j
 public class ConnectionManager implements IConnection {
 
-    private ComboPooledDataSource cpds;
+    private final ComboPooledDataSource cpds;
 
-    public void init() {
+    public ConnectionManager() {
         cpds = new ComboPooledDataSource();
         loadDriver();
     }

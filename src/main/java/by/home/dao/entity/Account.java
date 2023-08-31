@@ -23,4 +23,5 @@ public class Account implements Serializable {
     private short bankId;
     private UUID clientId;
     private BigDecimal balance;
+    private boolean interestAccrued;
 }
