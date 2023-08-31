@@ -12,12 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AppContextListener implements ServletContextListener {
 
+    @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         ConnectionSingleton.getInstance();
         ExecutorManagerSingleton.getInstance().init();
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
         try {
