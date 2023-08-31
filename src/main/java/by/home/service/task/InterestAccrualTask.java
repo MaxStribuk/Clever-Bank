@@ -28,21 +28,21 @@ public class InterestAccrualTask implements Runnable {
             List<Account> accountsForInterestAccrual = this.accountService
                     .getAccountsForInterestAccrual(ACCOUNTS_FOR_INTEREST_ACCRUAL, false);
             for (Account account : accountsForInterestAccrual) {
-                interestAccrual(account);
-                this.executorService.submit(() -> this.accountService.update(account));
+                BigDecimal accrual = interestAccrual(account);
+                this.executorService.submit(() -> this.accountService.interestAccrual(account, accrual));
             }
         }
     }
 
-    private void interestAccrual(Account account) {
+    private BigDecimal interestAccrual(Account account) {
         BigDecimal currentBalance = account.getBalance();
         BigDecimal percent = new BigDecimal(PropertiesUtil.getProperty(PERCENT_PROPERTY_NAME));
-        BigDecimal newBalance = currentBalance
-                .multiply(HUNDRED_PERCENT
-                        .add(percent)
-                        .divide(HUNDRED_PERCENT, 2, RoundingMode.HALF_UP)
-                );
+        BigDecimal percents = HUNDRED_PERCENT
+                .add(percent)
+                .divide(HUNDRED_PERCENT, 2, RoundingMode.HALF_UP);
+        BigDecimal newBalance = currentBalance.multiply(percents);
         account.setBalance(newBalance);
         account.setInterestAccrued(true);
+        return newBalance.subtract(currentBalance);
     }
 }

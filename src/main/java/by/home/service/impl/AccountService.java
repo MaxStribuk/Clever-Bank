@@ -3,8 +3,6 @@ package by.home.service.impl;
 import by.home.aop.api.Loggable;
 import by.home.aop.api.Transactional;
 import by.home.dao.api.IAccountDao;
-import by.home.dao.api.IBankDao;
-import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Account;
 import by.home.dao.entity.IsolationLevel;
 import by.home.dao.entity.Transaction;
@@ -20,7 +18,6 @@ import by.home.service.api.IAccountService;
 import by.home.service.api.IBankService;
 import by.home.service.api.ICheckService;
 import by.home.service.api.ITransactionService;
-import by.home.util.PropertiesUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
@@ -28,7 +25,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -36,8 +32,6 @@ import java.util.UUID;
 
 import static by.home.util.Constant.ExceptionMessage.ACCOUNT_NOT_FOUND;
 import static by.home.util.Constant.ExceptionMessage.INVALID_BALANCE;
-import static by.home.util.Constant.Utils.HUNDRED_PERCENT;
-import static by.home.util.Constant.Utils.PERCENT_PROPERTY_NAME;
 
 @RequiredArgsConstructor
 public class AccountService implements IAccountService {
@@ -50,15 +44,14 @@ public class AccountService implements IAccountService {
     private final IBankService bankService;
 
     @Override
-    @Transactional(daoInterfaces = {IAccountDao.class, ITransactionDao.class, IBankDao.class})
+    @Transactional(daoInterfaces = {IAccountDao.class})
     @Loggable
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         validate(changeBalanceDto);
         BigDecimal amount = changeBalanceDto.getAmount();
-        Account account = this.accountDao.findById(changeBalanceDto.getAccount())
-                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
+        Account account = findByAccountNumber(changeBalanceDto.getAccount());
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            writeOffMoney(account, amount);
+            writeOffMoney(account, amount.negate());
         } else {
             addMoney(account, amount);
         }
@@ -69,16 +62,14 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    @Transactional(daoInterfaces = {IAccountDao.class, ITransactionDao.class, IBankDao.class},
+    @Transactional(daoInterfaces = {IAccountDao.class},
             isolation = IsolationLevel.TRANSACTION_SERIALIZABLE)
     @Loggable
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
         validate(moneyTransferDto);
         BigDecimal amount = moneyTransferDto.getAmount();
-        Account accountFrom = this.accountDao.findById(moneyTransferDto.getAccountFrom())
-                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
-        Account accountTo = this.accountDao.findById(moneyTransferDto.getAccountTo())
-                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
+        Account accountFrom = findByAccountNumber(moneyTransferDto.getAccountFrom());
+        Account accountTo = findByAccountNumber(moneyTransferDto.getAccountTo());
         Transaction transaction = getTransaction(moneyTransferDto);
         sort(moneyTransferDto);
         writeOffMoney(accountFrom, amount);
@@ -98,8 +89,33 @@ public class AccountService implements IAccountService {
     @Override
     @Loggable
     @Transactional(daoInterfaces = IAccountDao.class)
+    public void interestAccrual(Account account, BigDecimal accrual) {
+        this.update(account);
+        Transaction transaction = Transaction.builder()
+                .accountTo(account.getNumber())
+                .time(LocalDateTime.now())
+                .id(UUID.randomUUID())
+                .typeId(TransactionType.getId(TransactionType.INTEREST_CALCULATION))
+                .amount(accrual)
+                .build();
+        this.transactionService.add(transaction);
+        TransactionDto transactionDto = getTransactionDto(transaction, account, account);
+        this.checkService.createCheck(transactionDto);
+    }
+
+    @Override
+    @Loggable
+    @Transactional(daoInterfaces = IAccountDao.class)
     public void update(Account account) {
         this.accountDao.update(account);
+    }
+
+    @Override
+    @Loggable
+    @Transactional(readOnly = true, daoInterfaces = {IAccountDao.class})
+    public Account findByAccountNumber(String accountNumber) {
+        return this.accountDao.findById(accountNumber)
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
     }
 
     private TransactionDto getTransactionDto(Transaction transaction, Account accountFrom, Account accountTo) {
@@ -172,13 +188,20 @@ public class AccountService implements IAccountService {
 
     private Transaction getTransaction(ChangeBalanceDto changeBalanceDto) {
         BigDecimal amount = changeBalanceDto.getAmount();
-        TransactionType type = amount.compareTo(BigDecimal.ZERO) > 0
-                ? TransactionType.REFILL
-                : TransactionType.WITHDRAWAL;
         String account = changeBalanceDto.getAccount();
+        TransactionType type;
+        String accountFrom = null;
+        String accountTo = null;
+        if (amount.compareTo(BigDecimal.ZERO) > 0) {
+            type = TransactionType.REFILL;
+            accountTo = account;
+        } else {
+            type = TransactionType.WITHDRAWAL;
+            accountFrom = account;
+        }
         return Transaction.builder()
-                .accountTo(account)
-                .accountFrom(account)
+                .accountTo(accountTo)
+                .accountFrom(accountFrom)
                 .time(LocalDateTime.now())
                 .id(UUID.randomUUID())
                 .typeId(TransactionType.getId(type))
