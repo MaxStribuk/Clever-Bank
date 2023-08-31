@@ -31,9 +31,6 @@ public class LaggingAspect {
         } catch (IOException e) {
             log.error("error while working with file " + LOGGING_FILE_NAME);
             throw e;
-        } catch (Throwable e) {
-            log.error("error in LoggingAspect");
-            throw e;
         }
     }
 }
