@@ -51,7 +51,7 @@ public class AccountService implements IAccountService {
         BigDecimal amount = changeBalanceDto.getAmount();
         Account account = findByAccountNumber(changeBalanceDto.getAccount());
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            writeOffMoney(account, amount);
+            writeOffMoney(account, amount.negate());
         } else {
             addMoney(account, amount);
         }

@@ -71,7 +71,7 @@ public class TransactionDao implements ITransactionDao {
                 .id(UUID.fromString(resultSet.getString(ID)))
                 .accountFrom(resultSet.getString(ACCOUNT_FROM))
                 .accountTo(resultSet.getString(ACCOUNT_TO))
-                .typeId(resultSet.getShort(TYPE_ID))
+                .typeId((short) (resultSet.getShort(TYPE_ID) - 1))
                 .amount(resultSet.getBigDecimal(AMOUNT))
                 .time(resultSet.getTimestamp(TIME).toLocalDateTime())
                 .build();
