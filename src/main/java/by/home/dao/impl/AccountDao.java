@@ -59,13 +59,14 @@ public class AccountDao implements IAccountDao {
     }
 
     @Override
-    public List<Account> getAccountsForInterestAccrual(int count) {
+    public List<Account> getAccountsForInterestAccrual(int count, boolean status) {
         List<Account> accounts = new ArrayList<>();
         try (PreparedStatement statement = this.conn.prepareStatement(
                 FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL,
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_UPDATABLE)) {
-            statement.setInt(1, count);
+            statement.setBoolean(1, status);
+            statement.setInt(2, count);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     accounts.add(getAccount(resultSet));

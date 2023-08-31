@@ -91,25 +91,15 @@ public class AccountService implements IAccountService {
     @Override
     @Loggable
     @Transactional(readOnly = true, daoInterfaces = IAccountDao.class)
-    public List<Account> getAccountsForInterestAccrual(int count) {
-        return this.accountDao.getAccountsForInterestAccrual(count);
+    public List<Account> getAccountsForInterestAccrual(int count, boolean status) {
+        return this.accountDao.getAccountsForInterestAccrual(count, status);
     }
 
     @Override
     @Loggable
     @Transactional(daoInterfaces = IAccountDao.class)
-    public void interestAccrual(Account account) {
-        if (!account.isInterestAccrued()) {
-            BigDecimal currentBalance = account.getBalance();
-            BigDecimal percent = new BigDecimal(PropertiesUtil.getProperty(PERCENT_PROPERTY_NAME));
-            BigDecimal newBalance = currentBalance
-                    .multiply(HUNDRED_PERCENT
-                            .add(percent)
-                            .divide(HUNDRED_PERCENT, RoundingMode.HALF_UP));
-            account.setBalance(newBalance);
-            account.setInterestAccrued(true);
-            this.accountDao.update(account);
-        }
+    public void update(Account account) {
+        this.accountDao.update(account);
     }
 
     private TransactionDto getTransactionDto(Transaction transaction, Account accountFrom, Account accountTo) {

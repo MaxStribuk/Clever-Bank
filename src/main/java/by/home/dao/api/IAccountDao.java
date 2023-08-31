@@ -11,5 +11,5 @@ public interface IAccountDao {
 
     void update(Account account);
 
-    List<Account> getAccountsForInterestAccrual(int count);
+    List<Account> getAccountsForInterestAccrual(int count, boolean status);
 }

@@ -12,7 +12,7 @@ public interface IAccountService {
 
     void transferMoney(MoneyTransferDto moneyTransferDto);
 
-    List<Account> getAccountsForInterestAccrual(int count);
+    List<Account> getAccountsForInterestAccrual(int count, boolean status);
 
-    void interestAccrual(Account account);
+    void update(Account account);
 }

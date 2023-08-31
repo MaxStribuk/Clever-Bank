@@ -13,7 +13,7 @@ public final class Constant {
 
         public static final String FIND_ACCOUNT_BY_ACCOUNT_NUMBER = "SELECT * FROM account WHERE number=?;";
         public static final String FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL =
-                "SELECT * FROM account WHERE interest_accrued=false LIMIT ?;";
+                "SELECT * FROM account WHERE interest_accrued=? LIMIT ?;";
         public static final String FIND_BANK_BY_BANK_ID = "SELECT * FROM bank WHERE id=?;";
         public static final String UPDATE_ACCOUNT = "UPDATE account SET balance=?, interest_accrued=? WHERE number=?;";
         public static final String FIND_TRANSACTION_BY_TRANSACTION_ID = "SELECT * FROM transaction WHERE id=?;";
@@ -97,7 +97,7 @@ public final class Constant {
         public static final int ACCOUNTS_FOR_INTEREST_ACCRUAL = 100;
         public static final long DELAY_BETWEEN_SHIPMENTS = 30L;
         public static final long INITIAL_DELAY = 30L;
-        public static final String PERCENT_PROPERTY_NAME = "percent";
+        public static final String PERCENT_PROPERTY_NAME = "percents";
         public static final BigDecimal HUNDRED_PERCENT = BigDecimal.valueOf(100);
     }
 }
