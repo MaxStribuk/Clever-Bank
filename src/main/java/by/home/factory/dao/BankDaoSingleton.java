@@ -1,6 +1,5 @@
 package by.home.factory.dao;
 
-import by.home.dao.api.IAccountDao;
 import by.home.dao.api.IBankDao;
 import by.home.dao.impl.BankDao;
 import lombok.AccessLevel;
