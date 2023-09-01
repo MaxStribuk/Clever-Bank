@@ -3,8 +3,7 @@ package by.home.dao.impl;
 import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Transaction;
 import by.home.data.exception.CustomSqlException;
-import lombok.Getter;
-import lombok.Setter;
+import by.home.factory.util.ConnectionSingleton;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -26,15 +25,24 @@ import static by.home.util.Constant.ColumnName.TYPE_ID;
 import static by.home.util.Constant.SqlQuery.FIND_TRANSACTION_BY_ACCOUNT;
 import static by.home.util.Constant.SqlQuery.INSERT_TRANSACTION;
 
-@Setter
-@Getter
+/**
+ * класс для взаимодействия с таблицей транзакций
+ */
 public class TransactionDao implements ITransactionDao {
 
-    private Connection conn;
-
+    /**
+     * метод позволяет найти все транзакции к счету за нужный промежуток времени
+     *
+     * @param account счет, для которого будет произведена выборка транзакций
+     * @param from    дата, с которой будет поиск транзакций
+     * @param to      дата, по которую будет производиться поиск транзакций (включительно)
+     * @return список найденных транзакций. Если транзакции не найдены, возвращает
+     * пустой список
+     */
     @Override
     public List<Transaction> findAll(String account, LocalDate from, LocalDate to) {
-        try (PreparedStatement statement = this.conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
             statement.setDate(1, Date.valueOf(from));
             statement.setDate(2, Date.valueOf(to));
             statement.setString(3, account);
@@ -51,9 +59,15 @@ public class TransactionDao implements ITransactionDao {
         }
     }
 
+    /**
+     * добавляет транзакцию в БД
+     *
+     * @param transaction объект транзакции, которая будет добавлена в БД
+     */
     @Override
     public void insert(Transaction transaction) {
-        try (PreparedStatement statement = this.conn.prepareStatement(INSERT_TRANSACTION)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(INSERT_TRANSACTION)) {
             statement.setString(1, transaction.getId().toString());
             statement.setString(2, transaction.getAccountFrom());
             statement.setString(3, transaction.getAccountTo());

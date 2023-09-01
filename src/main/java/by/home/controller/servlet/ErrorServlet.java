@@ -16,6 +16,9 @@ import java.util.List;
 
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 
+/**
+ * Сервлет для оработки ошибок веб-приложения
+ */
 @Slf4j
 @WebServlet("/error")
 public class ErrorServlet extends HttpServlet {
@@ -35,17 +38,20 @@ public class ErrorServlet extends HttpServlet {
         Throwable exception = (Throwable) req.getAttribute(ERROR_EXCEPTION);
         if (exception instanceof ConstraintViolationException violationException) {
             List<ErrorDto> errors = ConstraintViolationUtil.getErrors(violationException.getConstraintViolations());
-            log.error(errors.toString());
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            try (PrintWriter printWriter = resp.getWriter()) {
-                printWriter.write(errors.toString());
-            }
+            writeAnswer(resp, errors.toString(), HttpServletResponse.SC_BAD_REQUEST);
         } else if (exception instanceof RuntimeException runtimeException) {
-            log.error(runtimeException.getMessage());
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, runtimeException.getMessage());
+            writeAnswer(resp, runtimeException.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
         } else {
-            log.error(exception.getMessage());
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, exception.getMessage());
+            writeAnswer(resp, exception.getMessage(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void writeAnswer(HttpServletResponse resp, String message, int status)
+            throws IOException {
+        log.error(message);
+        resp.setStatus(status);
+        try (PrintWriter printWriter = resp.getWriter()) {
+            printWriter.write(message);
         }
     }
 }

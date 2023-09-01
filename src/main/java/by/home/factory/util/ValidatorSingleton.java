@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Validator;
 
+/**
+ * создает единственный объект класса, реализующего {@link Validator}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidatorSingleton {
 

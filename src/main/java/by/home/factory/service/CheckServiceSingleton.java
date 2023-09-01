@@ -5,6 +5,9 @@ import by.home.service.impl.CheckService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link ICheckService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CheckServiceSingleton {
 

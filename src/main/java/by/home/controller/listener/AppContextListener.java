@@ -8,6 +8,13 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Данный класс используется для инициализации объектов,
+ * необходимых для нормального функционирования веб-приложения.
+ * Явно вызывать методы данного класса нет необходимости, они будут вызваны
+ * автоматически при деплое приложения. При запуске консольной версии приложения
+ * данный класс не используется.
+ */
 @WebListener
 @Slf4j
 public class AppContextListener implements ServletContextListener {

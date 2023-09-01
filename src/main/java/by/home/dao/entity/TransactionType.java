@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
+/**
+ * Класс, представляющий собой перечисление возможных типов транзакций
+ */
 @AllArgsConstructor
 @Getter
 public enum TransactionType implements Serializable {

@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * класс для обработки ошибок входных параметров
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConstraintViolationUtil {
 

@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * Класс, представляющий собой сущность банк в базе данных
+ */
 @Getter
 @Setter
 @Builder

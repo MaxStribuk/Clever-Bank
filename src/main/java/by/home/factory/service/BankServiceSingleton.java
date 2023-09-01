@@ -7,6 +7,9 @@ import by.home.service.impl.BankService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IBankService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankServiceSingleton {
 

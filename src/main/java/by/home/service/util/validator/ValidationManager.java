@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+/**
+ * используется для инициализации объекта для валидации объектов dto классов
+ */
 @RequiredArgsConstructor
 public class ValidationManager implements IValidation {
 
