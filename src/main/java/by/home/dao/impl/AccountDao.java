@@ -3,8 +3,7 @@ package by.home.dao.impl;
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
 import by.home.data.exception.CustomSqlException;
-import lombok.Getter;
-import lombok.Setter;
+import by.home.factory.util.ConnectionSingleton;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,18 +24,15 @@ import static by.home.util.Constant.SqlQuery.FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL;
 import static by.home.util.Constant.SqlQuery.FIND_ACCOUNT_BY_ACCOUNT_NUMBER;
 import static by.home.util.Constant.SqlQuery.UPDATE_ACCOUNT;
 
-@Setter
-@Getter
 public class AccountDao implements IAccountDao {
-
-    private Connection conn;
 
     @Override
     public Optional<Account> findById(String number) {
-        try (PreparedStatement statement = this.conn.prepareStatement(
-                FIND_ACCOUNT_BY_ACCOUNT_NUMBER,
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(
+                     FIND_ACCOUNT_BY_ACCOUNT_NUMBER,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,
+                     ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, number);
             try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.first()
@@ -50,10 +46,9 @@ public class AccountDao implements IAccountDao {
 
     @Override
     public void update(Account account) {
-        try (PreparedStatement statement = this.conn.prepareStatement(UPDATE_ACCOUNT)) {
-            statement.setBigDecimal(1, account.getBalance());
-            statement.setBoolean(2, account.isInterestAccrued());
-            statement.setString(3, account.getNumber());
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(UPDATE_ACCOUNT)) {
+            setParameters(account, statement);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new CustomSqlException(e.getMessage(), e);
@@ -63,10 +58,11 @@ public class AccountDao implements IAccountDao {
     @Override
     public List<Account> getAccountsForInterestAccrual(int count, boolean status) {
         List<Account> accounts = new ArrayList<>();
-        try (PreparedStatement statement = this.conn.prepareStatement(
-                FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL,
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(
+                     FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,
+                     ResultSet.CONCUR_UPDATABLE)) {
             statement.setBoolean(1, status);
             statement.setInt(2, count);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -78,6 +74,52 @@ public class AccountDao implements IAccountDao {
         } catch (SQLException e) {
             throw new CustomSqlException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void transferMoney(Account accountFrom, Account accountTo) {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = ConnectionSingleton.getInstance().open();
+            conn.setAutoCommit(false);
+            statement = conn.prepareStatement(UPDATE_ACCOUNT);
+            setParameters(accountFrom, statement);
+            statement.executeUpdate();
+            setParameters(accountTo, statement);
+            statement.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    throw new CustomSqlException(ex);
+                }
+            }
+            throw new CustomSqlException(e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new CustomSqlException(e);
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new CustomSqlException(e);
+                }
+            }
+        }
+    }
+
+    private void setParameters(Account account, PreparedStatement statement) throws SQLException {
+        statement.setBigDecimal(1, account.getBalance());
+        statement.setBoolean(2, account.isInterestAccrued());
+        statement.setString(3, account.getNumber());
     }
 
     private Account getAccount(ResultSet resultSet) throws SQLException {

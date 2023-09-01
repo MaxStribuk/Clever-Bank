@@ -3,8 +3,7 @@ package by.home.dao.impl;
 import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Transaction;
 import by.home.data.exception.CustomSqlException;
-import lombok.Getter;
-import lombok.Setter;
+import by.home.factory.util.ConnectionSingleton;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -26,15 +25,12 @@ import static by.home.util.Constant.ColumnName.TYPE_ID;
 import static by.home.util.Constant.SqlQuery.FIND_TRANSACTION_BY_ACCOUNT;
 import static by.home.util.Constant.SqlQuery.INSERT_TRANSACTION;
 
-@Setter
-@Getter
 public class TransactionDao implements ITransactionDao {
-
-    private Connection conn;
 
     @Override
     public List<Transaction> findAll(String account, LocalDate from, LocalDate to) {
-        try (PreparedStatement statement = this.conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(FIND_TRANSACTION_BY_ACCOUNT)) {
             statement.setDate(1, Date.valueOf(from));
             statement.setDate(2, Date.valueOf(to));
             statement.setString(3, account);
@@ -53,7 +49,8 @@ public class TransactionDao implements ITransactionDao {
 
     @Override
     public void insert(Transaction transaction) {
-        try (PreparedStatement statement = this.conn.prepareStatement(INSERT_TRANSACTION)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(INSERT_TRANSACTION)) {
             statement.setString(1, transaction.getId().toString());
             statement.setString(2, transaction.getAccountFrom());
             statement.setString(3, transaction.getAccountTo());

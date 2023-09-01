@@ -1,7 +1,6 @@
 package by.home.service.impl;
 
 import by.home.aop.api.Loggable;
-import by.home.aop.api.Transactional;
 import by.home.dao.api.IBankDao;
 import by.home.dao.entity.Bank;
 import by.home.data.dto.BankDto;
@@ -18,7 +17,6 @@ public class BankService implements IBankService {
 
     @Override
     @Loggable
-    @Transactional(daoInterfaces = IBankDao.class)
     public BankDto findById(short id) {
         Bank bank = this.bankDao.findById(id)
                 .orElseThrow(() -> new BankNotFoundException("bank not found: " + id));

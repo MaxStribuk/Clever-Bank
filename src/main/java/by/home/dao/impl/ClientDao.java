@@ -3,8 +3,7 @@ package by.home.dao.impl;
 import by.home.dao.api.IClientDao;
 import by.home.dao.entity.Client;
 import by.home.data.exception.CustomSqlException;
-import lombok.Getter;
-import lombok.Setter;
+import by.home.factory.util.ConnectionSingleton;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,18 +17,15 @@ import static by.home.util.Constant.ColumnName.NAME;
 import static by.home.util.Constant.ColumnName.PASSPORT_NUMBER;
 import static by.home.util.Constant.SqlQuery.FIND_CLIENT_BY_ID;
 
-@Getter
-@Setter
 public class ClientDao implements IClientDao {
-
-    private Connection conn;
 
     @Override
     public Optional<Client> findById(UUID clientId) {
-        try (PreparedStatement statement = this.conn.prepareStatement(
-                FIND_CLIENT_BY_ID,
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE)) {
+        try (Connection conn = ConnectionSingleton.getInstance().open();
+             PreparedStatement statement = conn.prepareStatement(
+                     FIND_CLIENT_BY_ID,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,
+                     ResultSet.CONCUR_UPDATABLE)) {
             statement.setString(1, clientId.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.first()

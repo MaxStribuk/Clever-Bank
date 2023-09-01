@@ -28,16 +28,19 @@ public final class ParameterExtractor {
         Map<String, String[]> parameterMap = request.getParameterMap();
         String[] accounts = parameterMap.get(ACCOUNT);
         String[] amounts = parameterMap.get(AMOUNT);
+        ChangeBalanceDto changeBalanceDto = ChangeBalanceDto.builder().build();
 
-        if (validate(accounts) && validate(amounts)) {
-            return ChangeBalanceDto.builder()
-                    .account(accounts[0])
-                    .amount(new BigDecimal(amounts[0]))
-                    .build();
-        } else {
-            return ChangeBalanceDto.builder().build();
+        if (validate(accounts)) {
+            changeBalanceDto.setAccount(accounts[0]);
         }
-
+        if (validate(amounts)) {
+            try {
+                changeBalanceDto.setAmount(new BigDecimal(amounts[0]));
+            } catch (NumberFormatException e) {
+                changeBalanceDto.setAmount(null);
+            }
+        }
+        return changeBalanceDto;
     }
 
     public static MoneyTransferDto getMoneyTransferDto(HttpServletRequest request) {
@@ -46,16 +49,22 @@ public final class ParameterExtractor {
         String[] accountsFrom = parameterMap.get(ACCOUNT_FROM);
         String[] accountsTo = parameterMap.get(ACCOUNT_TO);
         String[] amounts = parameterMap.get(AMOUNT);
+        MoneyTransferDto moneyTransferDto = MoneyTransferDto.builder().build();
 
-        if (validate(accountsFrom) && validate(accountsTo) && validate(amounts)) {
-            return MoneyTransferDto.builder()
-                    .accountFrom(accountsFrom[0])
-                    .accountTo(accountsTo[0])
-                    .amount(new BigDecimal(amounts[0]))
-                    .build();
-        } else {
-            return MoneyTransferDto.builder().build();
+        if (validate(accountsFrom)) {
+            moneyTransferDto.setAccountFrom(accountsFrom[0]);
         }
+        if (validate(accountsTo)) {
+            moneyTransferDto.setAccountTo(accountsTo[0]);
+        }
+        if (validate(amounts)) {
+            try {
+                moneyTransferDto.setAmount(new BigDecimal(amounts[0]));
+            } catch (NumberFormatException e) {
+                moneyTransferDto.setAmount(null);
+            }
+        }
+        return moneyTransferDto;
     }
 
     public static AccountStatementDto getAccountStatementDto(HttpServletRequest request) {
@@ -65,22 +74,21 @@ public final class ParameterExtractor {
         String[] datesFrom = parameterMap.get(DATE_FROM);
         String[] datesTo = parameterMap.get(DATE_TO);
         String[] details = parameterMap.get(DETAILED_FLAG);
+        AccountStatementDto accountStatementDto = AccountStatementDto.builder().build();
 
-        if (validate(accounts) && validate(details)) {
-            LocalDate dateFrom = validate(datesFrom)
-                    ? getValidDate(datesFrom[0])
-                    : null;
-            LocalDate dateTo = validate(datesTo)
-                    ? getValidDate(datesTo[0])
-                    : LocalDate.now();
-            return AccountStatementDto.builder()
-                    .account(accounts[0])
-                    .dateFrom(dateFrom)
-                    .dateTo(dateTo)
-                    .build();
-        } else {
-            return AccountStatementDto.builder().build();
+        if (validate(accounts)) {
+            accountStatementDto.setAccount(accounts[0]);
         }
+        if (validate(details)) {
+            accountStatementDto.setDetailed(Boolean.parseBoolean(details[0]));
+        }
+        if (validate(datesFrom)) {
+            accountStatementDto.setDateFrom(getValidDate(datesFrom[0]));
+        }
+        if (validate(datesTo)) {
+            accountStatementDto.setDateFrom(getValidDate(datesTo[0]));
+        }
+        return accountStatementDto;
     }
 
     private static LocalDate getValidDate(String s) {

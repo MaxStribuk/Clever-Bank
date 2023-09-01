@@ -3,6 +3,7 @@ package by.home.service.util.validator;
 import by.home.factory.service.AccountServiceSingleton;
 import by.home.service.api.IExecutorService;
 import by.home.service.task.InterestAccrualTask;
+import by.home.service.task.ResetInterestAccrualStatusTask;
 import lombok.Getter;
 
 import java.util.concurrent.Executors;
@@ -23,6 +24,11 @@ public class ExecutorManager implements IExecutorService {
         this.executorService = Executors.newScheduledThreadPool(EXECUTOR_CORE_POOL_SIZE);
         this.executorService.scheduleWithFixedDelay(
                 new InterestAccrualTask(this.executorService, AccountServiceSingleton.getInstance()),
+                INITIAL_DELAY,
+                DELAY_BETWEEN_SHIPMENTS,
+                TimeUnit.SECONDS);
+        this.executorService.scheduleWithFixedDelay(
+                new ResetInterestAccrualStatusTask(this.executorService, AccountServiceSingleton.getInstance()),
                 INITIAL_DELAY,
                 DELAY_BETWEEN_SHIPMENTS,
                 TimeUnit.SECONDS);

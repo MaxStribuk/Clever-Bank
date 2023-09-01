@@ -12,4 +12,6 @@ public interface IAccountDao {
     void update(Account account);
 
     List<Account> getAccountsForInterestAccrual(int count, boolean status);
+
+    void transferMoney(Account accountFrom, Account accountTo);
 }

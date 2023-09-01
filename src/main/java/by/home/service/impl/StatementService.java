@@ -1,8 +1,6 @@
 package by.home.service.impl;
 
 import by.home.aop.api.Loggable;
-import by.home.aop.api.Transactional;
-import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Account;
 import by.home.dao.entity.Client;
 import by.home.dao.entity.Transaction;
@@ -44,11 +42,16 @@ public class StatementService implements IStatementService {
 
     @Override
     @Loggable
-    @Transactional(readOnly = true, daoInterfaces = ITransactionDao.class)
     public void createStatement(AccountStatementDto accountStatementDto) {
         validate(accountStatementDto);
         Account account = this.accountService.findByAccountNumber(accountStatementDto.getAccount());
+        if (accountStatementDto.getDateFrom() == null) {
+            accountStatementDto.setDateFrom(account.getOpenDate());
+        }
         LocalDateTime now = LocalDateTime.now();
+        if (accountStatementDto.getDateTo() == null) {
+            accountStatementDto.setDateFrom(now.toLocalDate());
+        }
         String fileName = String.format(STATEMENT_FILE_NAME, account.getClientId(),
                 now.format(DATE_TIME_PATTERN));
         String statement = getStatement(accountStatementDto, account, now);

@@ -1,10 +1,8 @@
 package by.home.service.impl;
 
 import by.home.aop.api.Loggable;
-import by.home.aop.api.Transactional;
 import by.home.dao.api.IAccountDao;
 import by.home.dao.entity.Account;
-import by.home.dao.entity.IsolationLevel;
 import by.home.dao.entity.Transaction;
 import by.home.dao.entity.TransactionType;
 import by.home.data.dto.BankDto;
@@ -44,7 +42,6 @@ public class AccountService implements IAccountService {
     private final IBankService bankService;
 
     @Override
-    @Transactional(daoInterfaces = {IAccountDao.class})
     @Loggable
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         validate(changeBalanceDto);
@@ -55,6 +52,7 @@ public class AccountService implements IAccountService {
         } else {
             addMoney(account, amount);
         }
+        this.accountDao.update(account);
         Transaction transaction = getTransaction(changeBalanceDto);
         this.transactionService.add(transaction);
         TransactionDto transactionDto = getTransactionDto(transaction, account, account);
@@ -62,8 +60,6 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    @Transactional(daoInterfaces = {IAccountDao.class},
-            isolation = IsolationLevel.TRANSACTION_SERIALIZABLE)
     @Loggable
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
         validate(moneyTransferDto);
@@ -74,6 +70,7 @@ public class AccountService implements IAccountService {
         sort(moneyTransferDto);
         writeOffMoney(accountFrom, amount);
         addMoney(accountTo, amount);
+        this.accountDao.transferMoney(accountFrom, accountTo);
         this.transactionService.add(transaction);
         TransactionDto transactionDto = getTransactionDto(transaction, accountFrom, accountTo);
         this.checkService.createCheck(transactionDto);
@@ -81,14 +78,12 @@ public class AccountService implements IAccountService {
 
     @Override
     @Loggable
-    @Transactional(readOnly = true, daoInterfaces = IAccountDao.class)
     public List<Account> getAccountsForInterestAccrual(int count, boolean status) {
         return this.accountDao.getAccountsForInterestAccrual(count, status);
     }
 
     @Override
     @Loggable
-    @Transactional(daoInterfaces = IAccountDao.class)
     public void interestAccrual(Account account, BigDecimal accrual) {
         this.update(account);
         Transaction transaction = Transaction.builder()
@@ -105,14 +100,12 @@ public class AccountService implements IAccountService {
 
     @Override
     @Loggable
-    @Transactional(daoInterfaces = IAccountDao.class)
     public void update(Account account) {
         this.accountDao.update(account);
     }
 
     @Override
     @Loggable
-    @Transactional(readOnly = true, daoInterfaces = {IAccountDao.class})
     public Account findByAccountNumber(String accountNumber) {
         return this.accountDao.findById(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND));
@@ -149,14 +142,12 @@ public class AccountService implements IAccountService {
             throw new InvalidBalanceException(INVALID_BALANCE);
         }
         account.setBalance(newBalance);
-        this.accountDao.update(account);
     }
 
     private void addMoney(Account account, BigDecimal amount) {
         BigDecimal currentBalance = account.getBalance();
         BigDecimal newBalance = currentBalance.add(amount);
         account.setBalance(newBalance);
-        this.accountDao.update(account);
     }
 
     private void validate(ChangeBalanceDto changeBalanceDto) {
