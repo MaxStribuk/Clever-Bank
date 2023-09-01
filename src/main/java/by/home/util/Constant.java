@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * класс, содержащий константы, используемые в приложении
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constant {
 
@@ -56,7 +59,6 @@ public final class Constant {
                 "the amount must have no more than 8 digits in the integer part and 2 in the fractional";
         public static final String INVALID_ACCOUNT_TO_NUMBER = "invalid accountTo number";
         public static final String INVALID_ACCOUNT_FROM_NUMBER = "invalid accountFrom number";
-        public static final String FAILED_LOAD_DAO_CLASSES ="failed load instance dao classes";
         public static final String INVALID_DATE = "date must be in the past or present";
         public static final String INVALID_DETAILED_PARAMETER = "detail parameter is required";
     }
@@ -72,12 +74,6 @@ public final class Constant {
         public static final String SQL_DRIVER_PROPERTIES_NAME = "driver";
         public static final String ACCOUNT_PATTERN = "^BY13[A-Z]{4}\\d{20}$";
         public static final String OPERATION_SUCCESSFUL = "Operation successful complete";
-        public static final String DAO_IMPL_PACKAGE_NAME = "by.home.dao.impl";
-        public static final String DAO_API_PACKAGE_NAME = "by.home.dao.api";
-        public static final String GET_INSTANCE_METHOD_NAME = "getInstance";
-        public static final String SET_CONN_METHOD_NAME = "setConn";
-        public static final String GET_CONN_METHOD_NAME = "getConn";
-        public static final String SINGLETON_CLASS_NAME_PATTERN = "by.home.factory.dao.%sSingleton";
         public static final String LOGGING_FILE_NAME = "logging.txt";
         public static final String LOGGING_MESSAGE_PATTERN = "Method %s args %s return value %s\n";
         public static final String DATE_PATTERN = "dd-MM-yyyy";
@@ -119,7 +115,7 @@ public final class Constant {
                         Остаток                   | %s BYN
                                      Приход       |       Уход
                         --------------------------------------------------------
-                        %21s BYN | %s BYN
+                        %21s BYN | -%s BYN
                                             """;
         public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         public static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd hh-mm-ss");

@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Класс, представляющий собой сущность транзакция в базе данных
+ */
 @Getter
 @Setter
 @Builder

@@ -22,6 +22,9 @@ import static by.home.util.Constant.ExceptionMessage.INVALID_ACCOUNT_TO_NUMBER;
 import static by.home.util.Constant.ExceptionMessage.INVALID_DIGITS;
 import static by.home.util.Constant.Utils.ACCOUNT_PATTERN;
 
+/**
+ * представляет dto класс для операции перевода денег
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

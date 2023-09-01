@@ -5,8 +5,10 @@ import by.home.service.impl.PdfService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IPdfService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-
 public class PdfServiceSingleton {
 
     private static volatile IPdfService instance;

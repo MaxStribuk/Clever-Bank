@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Класс, представляющий собой сущность счет в базе данных
+ */
 @Getter
 @Setter
 @Builder

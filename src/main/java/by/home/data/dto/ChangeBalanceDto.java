@@ -19,6 +19,9 @@ import static by.home.util.Constant.ExceptionMessage.INVALID_ACCOUNT_NUMBER;
 import static by.home.util.Constant.ExceptionMessage.INVALID_DIGITS;
 import static by.home.util.Constant.Utils.ACCOUNT_PATTERN;
 
+/**
+ * представляет dto класс для операции изменения баланса
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -5,6 +5,9 @@ import by.home.dao.util.ConnectionManager;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IConnection}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectionSingleton {
 

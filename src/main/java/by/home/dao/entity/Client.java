@@ -9,6 +9,9 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * Класс, представляющий собой сущность клиент в базе данных
+ */
 @Getter
 @Setter
 @Builder

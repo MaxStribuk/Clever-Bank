@@ -5,6 +5,9 @@ import by.home.dao.impl.ClientDao;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IClientDao}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientDaoSingleton {
 

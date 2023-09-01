@@ -6,6 +6,9 @@ import by.home.service.impl.TransactionService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link ITransactionService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionServiceSingleton {
 

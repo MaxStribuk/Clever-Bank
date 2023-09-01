@@ -10,6 +10,9 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static by.home.util.Constant.Utils.ACCOUNTS_FOR_INTEREST_ACCRUAL;
 
+/**
+ * класс представляет собой задачу по сброса флага на следующий день после начисления процентов
+ */
 @RequiredArgsConstructor
 public class ResetInterestAccrualStatusTask implements Runnable {
 

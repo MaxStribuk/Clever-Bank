@@ -17,9 +17,17 @@ import java.io.OutputStream;
 
 import static by.home.util.Constant.Utils.FONT_COURIER_NEW_PATH;
 
+/**
+ * сервисный класс для работа с pdf документами
+ */
 @Slf4j
 public class PdfService implements IPdfService {
 
+    /**
+     * генерирует pdf
+     * @param text текст, который будет добавлен в pdf файл
+     * @param pdfName имя файла, включая относительный путь к нему
+     */
     @Override
     @Loggable
     public void createPdf(String text, String pdfName) {

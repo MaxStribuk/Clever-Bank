@@ -8,6 +8,9 @@ import by.home.service.impl.AccountService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IAccountService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountServiceSingleton {
 

@@ -1,7 +1,6 @@
 package by.home.service.impl;
 
 import by.home.aop.api.Loggable;
-import by.home.aop.api.Transactional;
 import by.home.dao.api.ITransactionDao;
 import by.home.dao.entity.Transaction;
 import by.home.data.dto.AccountStatementDto;
@@ -10,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+/**
+ * сервисный класс для операций с сущностью транзакция
+ */
 @RequiredArgsConstructor
 public class TransactionService implements ITransactionService {
 
@@ -17,14 +19,12 @@ public class TransactionService implements ITransactionService {
 
     @Override
     @Loggable
-    @Transactional(daoInterfaces = ITransactionDao.class)
     public void add(Transaction transaction) {
         this.transactionDao.insert(transaction);
     }
 
     @Override
     @Loggable
-    @Transactional(readOnly = true, daoInterfaces = ITransactionDao.class)
     public List<Transaction> getTransactions(AccountStatementDto accountStatementDto) {
         return this.transactionDao.findAll(
                 accountStatementDto.getAccount(),

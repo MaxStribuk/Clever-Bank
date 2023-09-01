@@ -14,11 +14,18 @@ import static by.home.util.Constant.Utils.DB_URL_PROPERTIES_NAME;
 import static by.home.util.Constant.Utils.DB_USERNAME_PROPERTIES_NAME;
 import static by.home.util.Constant.Utils.SQL_DRIVER_PROPERTIES_NAME;
 
+/**
+ * Класс, позволяющий работать с БД.
+ */
 @Slf4j
 public class ConnectionManager implements IConnection {
 
     private final ComboPooledDataSource cpds;
 
+    /**
+     * конструктор данного класса должен вызываться при старте приложения,
+     * чтобы корректно настроить подключение к БД
+     */
     public ConnectionManager() {
         cpds = new ComboPooledDataSource();
         loadDriver();
@@ -35,11 +42,23 @@ public class ConnectionManager implements IConnection {
         cpds.setPassword(PropertiesUtil.getProperty(DB_PASSWORD_PROPERTIES_NAME));
     }
 
+    /**
+     * Данный метод вызывается для получения объекта {@link Connection},
+     * с помощью которого можно взаимодействовать с БД
+     *
+     * @return {@link Connection}
+     * @throws SQLException - если получение оъекта {@link Connection} не удалось
+     */
     @Override
     public Connection open() throws SQLException {
         return cpds.getConnection();
     }
 
+    /**
+     * вы же не забываете закрывать соединение с БД?
+     *
+     * @throws Exception -
+     */
     @Override
     public void close() throws Exception {
         cpds.close();

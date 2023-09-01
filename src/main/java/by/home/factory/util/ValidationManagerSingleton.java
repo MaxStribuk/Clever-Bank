@@ -8,6 +8,9 @@ import org.apache.bval.jsr.ApacheValidationProvider;
 
 import javax.validation.Validation;
 
+/**
+ * создает единственный объект класса, реализующего {@link IValidation}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidationManagerSingleton {
 
