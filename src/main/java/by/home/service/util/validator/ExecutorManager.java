@@ -14,6 +14,10 @@ import static by.home.util.Constant.Utils.DELAY_BETWEEN_SHIPMENTS;
 import static by.home.util.Constant.Utils.EXECUTOR_CORE_POOL_SIZE;
 import static by.home.util.Constant.Utils.INITIAL_DELAY;
 
+/**
+ * класс для инициализации объекта, реализуещего {@link ScheduledExecutorService}
+ * для выполнения асинхронных задач
+ */
 @Getter
 public class ExecutorManager implements IExecutorService {
 

@@ -17,8 +17,18 @@ import static by.home.util.Constant.ColumnName.NAME;
 import static by.home.util.Constant.ColumnName.PASSPORT_NUMBER;
 import static by.home.util.Constant.SqlQuery.FIND_CLIENT_BY_ID;
 
+/**
+ * класс для взаимодействия с таблицей клиентов
+ */
 public class ClientDao implements IClientDao {
 
+    /**
+     * ищет клиента в БД по id
+     *
+     * @param clientId id клиента
+     * @return {@link Optional}, содержащий клиента, если он был найден в БД,
+     * или пустой, если клиента найден не был
+     */
     @Override
     public Optional<Client> findById(UUID clientId) {
         try (Connection conn = ConnectionSingleton.getInstance().open();

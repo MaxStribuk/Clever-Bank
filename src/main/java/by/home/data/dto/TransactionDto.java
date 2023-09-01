@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * представляет dto класс для операции добавления транзакции
+ */
 @Getter
 @Setter
 @Builder

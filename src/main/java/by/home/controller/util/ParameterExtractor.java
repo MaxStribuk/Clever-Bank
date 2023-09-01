@@ -20,6 +20,10 @@ import static by.home.util.Constant.Utils.DATE_FROM;
 import static by.home.util.Constant.Utils.DATE_TO;
 import static by.home.util.Constant.Utils.DETAILED_FLAG;
 
+/**
+ * Данный утилитный класс осуществляет парсинг параметров запроса и
+ * создание объектов dto классов.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParameterExtractor {
 

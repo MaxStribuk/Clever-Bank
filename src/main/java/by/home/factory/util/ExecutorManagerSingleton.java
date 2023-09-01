@@ -4,6 +4,9 @@ import by.home.service.util.validator.ExecutorManager;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса {@link ExecutorManager}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExecutorManagerSingleton {
 

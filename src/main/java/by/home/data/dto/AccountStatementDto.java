@@ -18,6 +18,9 @@ import static by.home.util.Constant.ExceptionMessage.INVALID_DATE;
 import static by.home.util.Constant.ExceptionMessage.INVALID_DETAILED_PARAMETER;
 import static by.home.util.Constant.Utils.ACCOUNT_PATTERN;
 
+/**
+ * представляет dto класс для операции генерации выписки
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

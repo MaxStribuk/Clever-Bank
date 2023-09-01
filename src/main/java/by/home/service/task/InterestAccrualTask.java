@@ -15,6 +15,9 @@ import static by.home.util.Constant.Utils.ACCOUNTS_FOR_INTEREST_ACCRUAL;
 import static by.home.util.Constant.Utils.HUNDRED_PERCENT;
 import static by.home.util.Constant.Utils.PERCENT_PROPERTY_NAME;
 
+/**
+ * класс представляет собой задачу по начислению процентов
+ */
 @RequiredArgsConstructor
 public class InterestAccrualTask implements Runnable {
 

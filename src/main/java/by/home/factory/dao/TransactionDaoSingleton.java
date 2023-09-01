@@ -5,6 +5,9 @@ import by.home.dao.impl.TransactionDao;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link ITransactionDao}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoSingleton {
 

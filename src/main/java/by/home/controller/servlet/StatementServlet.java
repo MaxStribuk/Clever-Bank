@@ -15,6 +15,9 @@ import java.io.PrintWriter;
 
 import static by.home.util.Constant.Utils.OPERATION_SUCCESSFUL;
 
+/**
+ * Сервлет для формирования выписки по банковскому счету
+ */
 @WebServlet("/transactions/statement")
 public class StatementServlet extends HttpServlet {
 

@@ -17,6 +17,9 @@ import java.util.List;
 
 import static by.home.util.Constant.Utils.OPERATION_SUCCESSFUL;
 
+/**
+ * класс для выбора операции в консольной версии приложения
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class StartMenu {

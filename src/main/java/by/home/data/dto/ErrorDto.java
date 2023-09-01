@@ -5,6 +5,10 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
+/**
+ * представляет dto класс для хранения неверного входного параметра
+ * и комментария об ошибке
+ */
 @AllArgsConstructor
 @Getter
 public class ErrorDto implements Serializable {

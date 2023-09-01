@@ -15,6 +15,10 @@ import java.io.PrintWriter;
 
 import static by.home.util.Constant.Utils.OPERATION_SUCCESSFUL;
 
+/**
+ * Сервлет для обработки запроса по переводу денежных средств
+ * с одного счета на другой
+ */
 @WebServlet("/accounts/transferMoney")
 public class MoneyTransferServlet extends HttpServlet {
 

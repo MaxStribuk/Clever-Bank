@@ -15,15 +15,25 @@ import static by.home.util.Constant.ColumnName.ID;
 import static by.home.util.Constant.ColumnName.NAME;
 import static by.home.util.Constant.SqlQuery.FIND_BANK_BY_BANK_ID;
 
+/**
+ * класс для взаимодействия с таблицей банки
+ */
 public class BankDao implements IBankDao {
 
+    /**
+     * ищет банк в БД по id
+     *
+     * @param id id банка
+     * @return {@link Optional}, содержащий банк, если он был найден в БД,
+     * или пустой, если банк найден не был
+     */
     @Override
     public Optional<Bank> findById(short id) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
              PreparedStatement statement = conn.prepareStatement(
-                FIND_BANK_BY_BANK_ID,
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE)) {
+                     FIND_BANK_BY_BANK_ID,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,
+                     ResultSet.CONCUR_UPDATABLE)) {
             statement.setShort(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.first()

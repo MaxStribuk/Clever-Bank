@@ -10,6 +10,9 @@ import java.util.Properties;
 
 import static by.home.util.Constant.Utils.PROPERTIES_FILE_NAME;
 
+/**
+ * класс для парсинга файла properties
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PropertiesUtil {
 

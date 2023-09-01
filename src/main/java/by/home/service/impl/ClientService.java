@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * сервисный класс для операций с сущностью клиент
+ */
 @RequiredArgsConstructor
 public class ClientService implements IClientService {
 

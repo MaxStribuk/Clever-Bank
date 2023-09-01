@@ -15,6 +15,9 @@ import java.io.PrintWriter;
 
 import static by.home.util.Constant.Utils.OPERATION_SUCCESSFUL;
 
+/**
+ * Сервлет для обработки запроса по изменению баланса банковского счета
+ */
 @WebServlet("/accounts/changeBalance")
 public class ChangeBalanceServlet extends HttpServlet {
 

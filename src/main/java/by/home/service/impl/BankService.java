@@ -9,6 +9,9 @@ import by.home.service.api.IBankService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
+/**
+ * сервисный класс для операций с сущностью банк
+ */
 @RequiredArgsConstructor
 public class BankService implements IBankService {
 

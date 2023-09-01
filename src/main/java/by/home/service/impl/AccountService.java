@@ -31,6 +31,9 @@ import java.util.UUID;
 import static by.home.util.Constant.ExceptionMessage.ACCOUNT_NOT_FOUND;
 import static by.home.util.Constant.ExceptionMessage.INVALID_BALANCE;
 
+/**
+ * сервисный класс для работы со счетами клиентов
+ */
 @RequiredArgsConstructor
 public class AccountService implements IAccountService {
 
@@ -41,6 +44,12 @@ public class AccountService implements IAccountService {
     private final ModelMapper modelMapper;
     private final IBankService bankService;
 
+    /**
+     * метод, изменяющий баланс по конкретному счету
+     *
+     * @param changeBalanceDto объект со счетом для изменения
+     *                         и суммой изменения
+     */
     @Override
     @Loggable
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
@@ -59,6 +68,12 @@ public class AccountService implements IAccountService {
         this.checkService.createCheck(transactionDto);
     }
 
+    /**
+     * метод для перевода денег с одного счета на другой
+     *
+     * @param moneyTransferDto объект, содержаний счета для денежного перевода
+     *                         и сумму транзакции
+     */
     @Override
     @Loggable
     public void transferMoney(MoneyTransferDto moneyTransferDto) {
@@ -82,6 +97,12 @@ public class AccountService implements IAccountService {
         return this.accountDao.getAccountsForInterestAccrual(count, status);
     }
 
+    /**
+     * метод для начисления процентов
+     *
+     * @param account счет, на который будет произведено нпчисление процентов
+     * @param accrual сумма начисленных процентов
+     */
     @Override
     @Loggable
     public void interestAccrual(Account account, BigDecimal accrual) {

@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+/**
+ * сервисный класс для операций с сущностью транзакция
+ */
 @RequiredArgsConstructor
 public class TransactionService implements ITransactionService {
 

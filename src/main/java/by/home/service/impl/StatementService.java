@@ -30,6 +30,9 @@ import static by.home.util.Constant.Utils.GENERAL_STATEMENT_TEMPLATE;
 import static by.home.util.Constant.Utils.STATEMENT_FILE_NAME;
 import static by.home.util.Constant.Utils.TRANSACTION_TEMPLATE;
 
+/**
+ * сервисный класс для создания выписки по счету
+ */
 @RequiredArgsConstructor
 public class StatementService implements IStatementService {
 
@@ -40,22 +43,30 @@ public class StatementService implements IStatementService {
     private final IBankService bankService;
     private final IClientService clientService;
 
+    /**
+     * базовый метод для генерации выписки
+     * @param accountStatementDto объект с информацией, необходимой для создания выписки
+     */
     @Override
     @Loggable
     public void createStatement(AccountStatementDto accountStatementDto) {
         validate(accountStatementDto);
         Account account = this.accountService.findByAccountNumber(accountStatementDto.getAccount());
-        if (accountStatementDto.getDateFrom() == null) {
-            accountStatementDto.setDateFrom(account.getOpenDate());
-        }
         LocalDateTime now = LocalDateTime.now();
-        if (accountStatementDto.getDateTo() == null) {
-            accountStatementDto.setDateTo(now.toLocalDate());
-        }
+        setValidDates(accountStatementDto, account, now);
         String fileName = String.format(STATEMENT_FILE_NAME, account.getClientId(),
                 now.format(DATE_TIME_PATTERN));
         String statement = getStatement(accountStatementDto, account, now);
         this.pdfService.createPdf(statement, fileName);
+    }
+
+    private void setValidDates(AccountStatementDto accountStatementDto, Account account, LocalDateTime now) {
+        if (accountStatementDto.getDateFrom() == null) {
+            accountStatementDto.setDateFrom(account.getOpenDate());
+        }
+        if (accountStatementDto.getDateTo() == null) {
+            accountStatementDto.setDateTo(now.toLocalDate());
+        }
     }
 
     private void validate(AccountStatementDto accountStatementDto) {

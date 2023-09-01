@@ -13,11 +13,18 @@ import static by.home.util.Constant.Utils.CHECK_FILE_NAME;
 import static by.home.util.Constant.Utils.CHECK_TEMPLATE;
 import static by.home.util.Constant.Utils.DATE_PATTERN;
 
+/**
+ * класс для генерации чека
+ */
 @RequiredArgsConstructor
 public class CheckService implements ICheckService {
 
     private final IPdfService pdfService;
 
+    /**
+     * создает текст чета и путь, по которому будет создан pdf файл
+     * @param transaction dto с набором полей, необходимых для создания чека
+     */
     @Override
     @Loggable
     public void createCheck(TransactionDto transaction) {

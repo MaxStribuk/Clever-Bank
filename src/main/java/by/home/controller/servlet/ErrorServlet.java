@@ -16,6 +16,9 @@ import java.util.List;
 
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 
+/**
+ * Сервлет для оработки ошибок веб-приложения
+ */
 @Slf4j
 @WebServlet("/error")
 public class ErrorServlet extends HttpServlet {

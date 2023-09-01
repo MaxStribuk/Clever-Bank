@@ -24,8 +24,18 @@ import static by.home.util.Constant.SqlQuery.FIND_ACCOUNTS_FOR_INTEREST_ACCRUAL;
 import static by.home.util.Constant.SqlQuery.FIND_ACCOUNT_BY_ACCOUNT_NUMBER;
 import static by.home.util.Constant.SqlQuery.UPDATE_ACCOUNT;
 
+/**
+ * класс для взаимодействия с таблицей счет
+ */
 public class AccountDao implements IAccountDao {
 
+    /**
+     * ищет счет в БД по id
+     *
+     * @param number id счета
+     * @return {@link Optional}, содержащий счет, если он был найден в БД,
+     * или пустой, если счет найден не был
+     */
     @Override
     public Optional<Account> findById(String number) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
@@ -44,6 +54,11 @@ public class AccountDao implements IAccountDao {
         }
     }
 
+    /**
+     * обновляет состояние счета в БД
+     *
+     * @param account счет, состояние которого будет сохранено в БД
+     */
     @Override
     public void update(Account account) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
@@ -55,6 +70,17 @@ public class AccountDao implements IAccountDao {
         }
     }
 
+    /**
+     * возвращает список счетов для начисления процентов / обновления
+     * статуса по счетам с начисленными процентами
+     * Используется, когда необходимо достать из БД счета, по которым
+     * необходимо начислить проценты в последний день месяца, либо сбросить
+     * флаг начисления процентов в первый день месяца
+     *
+     * @param count  количество записей в выборке
+     * @param status статус счета (были ли уже начислены проценты)
+     * @return список счетов, удовлетворяющих условиям запроса либо пустой список
+     */
     @Override
     public List<Account> getAccountsForInterestAccrual(int count, boolean status) {
         List<Account> accounts = new ArrayList<>();
@@ -76,6 +102,16 @@ public class AccountDao implements IAccountDao {
         }
     }
 
+    /**
+     * метод перевода денежных средств с одного счета на другой.
+     * Методу передаются счета с уже вычисленными новыми значениями балансов
+     * на счетах
+     *
+     * @param accountFrom счет, с которого осуществляется перевод денег (с состоянием
+     *                    баланса на конец транзакции)
+     * @param accountTo   счет, на который осуществляется перевод денег (с состоянием
+     *                    баланса на конец транзакции)
+     */
     @Override
     public void transferMoney(Account accountFrom, Account accountTo) {
         Connection conn = null;

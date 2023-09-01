@@ -6,6 +6,9 @@ import by.home.service.impl.ClientService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IClientService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientServiceSingleton {
 

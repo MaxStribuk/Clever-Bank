@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * класс, содержащий константы, используемые в приложении
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constant {
 

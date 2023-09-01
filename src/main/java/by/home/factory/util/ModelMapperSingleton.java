@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
+/**
+ * создает единственный объект класса {@link ModelMapper}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ModelMapperSingleton {
 

@@ -6,6 +6,9 @@ import by.home.service.impl.StatementService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * создает единственный объект класса, реализующего {@link IStatementService}
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StatementServiceSingleton {
 

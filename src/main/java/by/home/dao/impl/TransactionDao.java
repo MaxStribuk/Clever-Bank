@@ -25,8 +25,20 @@ import static by.home.util.Constant.ColumnName.TYPE_ID;
 import static by.home.util.Constant.SqlQuery.FIND_TRANSACTION_BY_ACCOUNT;
 import static by.home.util.Constant.SqlQuery.INSERT_TRANSACTION;
 
+/**
+ * класс для взаимодействия с таблицей транзакций
+ */
 public class TransactionDao implements ITransactionDao {
 
+    /**
+     * метод позволяет найти все транзакции к счету за нужный промежуток времени
+     *
+     * @param account счет, для которого будет произведена выборка транзакций
+     * @param from    дата, с которой будет поиск транзакций
+     * @param to      дата, по которую будет производиться поиск транзакций (включительно)
+     * @return список найденных транзакций. Если транзакции не найдены, возвращает
+     * пустой список
+     */
     @Override
     public List<Transaction> findAll(String account, LocalDate from, LocalDate to) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
@@ -47,6 +59,11 @@ public class TransactionDao implements ITransactionDao {
         }
     }
 
+    /**
+     * добавляет транзакцию в БД
+     *
+     * @param transaction объект транзакции, которая будет добавлена в БД
+     */
     @Override
     public void insert(Transaction transaction) {
         try (Connection conn = ConnectionSingleton.getInstance().open();
