@@ -112,7 +112,7 @@ public final class Constant {
                         Остаток                   | %s BYN
                                      Приход       |       Уход
                         --------------------------------------------------------
-                        %21s BYN | %s BYN
+                        %21s BYN | -%s BYN
                                             """;
         public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         public static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd hh-mm-ss");

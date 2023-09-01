@@ -50,7 +50,7 @@ public class StatementService implements IStatementService {
         }
         LocalDateTime now = LocalDateTime.now();
         if (accountStatementDto.getDateTo() == null) {
-            accountStatementDto.setDateFrom(now.toLocalDate());
+            accountStatementDto.setDateTo(now.toLocalDate());
         }
         String fileName = String.format(STATEMENT_FILE_NAME, account.getClientId(),
                 now.format(DATE_TIME_PATTERN));
